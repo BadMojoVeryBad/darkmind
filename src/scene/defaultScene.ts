@@ -1,7 +1,7 @@
-import { Scene } from "phaser-component-framework";
+import { Scene } from 'phaser-component-framework';
 
 export class DefaultScene extends Scene {
-  init() {
+  public init(): void {
     this.addComponent('player');
   }
 }

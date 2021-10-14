@@ -10,13 +10,13 @@ const game = Game.create(320, 180);
 game.registerScene('default', DefaultScene);
 
 // Register components.
-game.registerComponent('player',PlayerComponent);
+game.registerComponent('player', PlayerComponent);
 
 // Register assets.
 game.registerAsset('player', 'assets/player.png');
 
 // Register controls.
-// game.registerControl('UP', Keyboard.ArrowUp, Gamepad.UP);
+game.registerControl('UP', 'Keyboard.38', 'Gamepad.R2');
 
 // Start game.
 game.start();
