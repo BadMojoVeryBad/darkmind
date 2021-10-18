@@ -1,2 +1,2 @@
 # DARKMIND
-...
+Be strong.

@@ -1,7 +1,7 @@
 {
-    "name": "phaser3-typescript-starter-template",
+    "name": "darkmind",
     "version": "0.0.0",
-    "description": "A Phaser 3 starter template I use for my own projects!",
+    "description": "Be strong.",
     "main": "src/game.ts",
     "scripts": {
         "dev": "npx mix",
@@ -10,14 +10,11 @@
         "lint": "node_modules/eslint/bin/eslint.js src/",
         "fix": "node_modules/eslint/bin/eslint.js src/ --fix"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/BadMojoVeryBad/phaser3-typescript-starter-template"
-    },
     "author": "Haydn Smith",
     "license": "MIT",
-    "homepage": "https://github.com/BadMojoVeryBad/phaser3-typescript-starter-template#readme",
+    "homepage": "https://github.com/BadMojoVeryBad/darkmind#readme",
     "dependencies": {
+        "phaser-component-framework": "https://github.com/BadMojoVeryBad/phaser-component-framework.git#master",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
