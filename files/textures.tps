@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -84,7 +84,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -181,6 +181,80 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">textures/darkPixel.png</key>
+            <key type="filename">textures/darkestPixel.png</key>
+            <key type="filename">textures/lightPixel.png</key>
+            <key type="filename">textures/lightestPixel.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>0,0,1,1</rect>
+                <key>scale9Paddings</key>
+                <rect>0,0,1,1</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">textures/groundLight1.png</key>
+            <key type="filename">textures/groundLight10.png</key>
+            <key type="filename">textures/groundLight11.png</key>
+            <key type="filename">textures/groundLight12.png</key>
+            <key type="filename">textures/groundLight2.png</key>
+            <key type="filename">textures/groundLight3.png</key>
+            <key type="filename">textures/groundLight4.png</key>
+            <key type="filename">textures/groundLight5.png</key>
+            <key type="filename">textures/groundLight6.png</key>
+            <key type="filename">textures/groundLight7.png</key>
+            <key type="filename">textures/groundLight8.png</key>
+            <key type="filename">textures/groundLight9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,8,32,16</rect>
+                <key>scale9Paddings</key>
+                <rect>16,8,32,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">textures/playerDashDiagonalDown1.png</key>
+            <key type="filename">textures/playerDashDiagonalDown2.png</key>
+            <key type="filename">textures/playerDashDiagonalDown3.png</key>
+            <key type="filename">textures/playerDashDiagonalDown4.png</key>
+            <key type="filename">textures/playerDashDiagonalDown5.png</key>
+            <key type="filename">textures/playerDashDiagonalDown6.png</key>
+            <key type="filename">textures/playerDashDiagonalUp1.png</key>
+            <key type="filename">textures/playerDashDiagonalUp2.png</key>
+            <key type="filename">textures/playerDashDiagonalUp3.png</key>
+            <key type="filename">textures/playerDashDiagonalUp4.png</key>
+            <key type="filename">textures/playerDashDiagonalUp5.png</key>
+            <key type="filename">textures/playerDashDiagonalUp6.png</key>
+            <key type="filename">textures/playerDashDown1.png</key>
+            <key type="filename">textures/playerDashDown2.png</key>
+            <key type="filename">textures/playerDashDown3.png</key>
+            <key type="filename">textures/playerDashDown4.png</key>
+            <key type="filename">textures/playerDashDown5.png</key>
+            <key type="filename">textures/playerDashDown6.png</key>
+            <key type="filename">textures/playerDashSide1.png</key>
+            <key type="filename">textures/playerDashSide2.png</key>
+            <key type="filename">textures/playerDashSide3.png</key>
+            <key type="filename">textures/playerDashSide4.png</key>
+            <key type="filename">textures/playerDashSide5.png</key>
+            <key type="filename">textures/playerDashSide6.png</key>
+            <key type="filename">textures/playerDashUp1.png</key>
+            <key type="filename">textures/playerDashUp2.png</key>
+            <key type="filename">textures/playerDashUp3.png</key>
+            <key type="filename">textures/playerDashUp4.png</key>
+            <key type="filename">textures/playerDashUp5.png</key>
+            <key type="filename">textures/playerDashUp6.png</key>
             <key type="filename">textures/playerIdleDiagonalDown1.png</key>
             <key type="filename">textures/playerIdleDiagonalDown2.png</key>
             <key type="filename">textures/playerIdleDiagonalDown3.png</key>
@@ -211,12 +285,71 @@
             <key type="filename">textures/playerIdleUp4.png</key>
             <key type="filename">textures/playerIdleUp5.png</key>
             <key type="filename">textures/playerIdleUp6.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown1.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown2.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown3.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown4.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown5.png</key>
+            <key type="filename">textures/playerRunningDiagonalDown6.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp1.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp2.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp3.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp4.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp5.png</key>
+            <key type="filename">textures/playerRunningDiagonalUp6.png</key>
+            <key type="filename">textures/playerRunningDown1.png</key>
+            <key type="filename">textures/playerRunningDown2.png</key>
+            <key type="filename">textures/playerRunningDown3.png</key>
+            <key type="filename">textures/playerRunningDown4.png</key>
+            <key type="filename">textures/playerRunningDown5.png</key>
+            <key type="filename">textures/playerRunningDown6.png</key>
             <key type="filename">textures/playerRunningSide1.png</key>
             <key type="filename">textures/playerRunningSide2.png</key>
             <key type="filename">textures/playerRunningSide3.png</key>
             <key type="filename">textures/playerRunningSide4.png</key>
             <key type="filename">textures/playerRunningSide5.png</key>
             <key type="filename">textures/playerRunningSide6.png</key>
+            <key type="filename">textures/playerRunningUp1.png</key>
+            <key type="filename">textures/playerRunningUp2.png</key>
+            <key type="filename">textures/playerRunningUp3.png</key>
+            <key type="filename">textures/playerRunningUp4.png</key>
+            <key type="filename">textures/playerRunningUp5.png</key>
+            <key type="filename">textures/playerRunningUp6.png</key>
+            <key type="filename">textures/puffA1.png</key>
+            <key type="filename">textures/puffA2.png</key>
+            <key type="filename">textures/puffA3.png</key>
+            <key type="filename">textures/puffA4.png</key>
+            <key type="filename">textures/puffA5.png</key>
+            <key type="filename">textures/puffA6.png</key>
+            <key type="filename">textures/puffA7.png</key>
+            <key type="filename">textures/puffB1.png</key>
+            <key type="filename">textures/puffB2.png</key>
+            <key type="filename">textures/puffB3.png</key>
+            <key type="filename">textures/puffB4.png</key>
+            <key type="filename">textures/puffB5.png</key>
+            <key type="filename">textures/puffB6.png</key>
+            <key type="filename">textures/puffB7.png</key>
+            <key type="filename">textures/puffC1.png</key>
+            <key type="filename">textures/puffC2.png</key>
+            <key type="filename">textures/puffC3.png</key>
+            <key type="filename">textures/puffC4.png</key>
+            <key type="filename">textures/puffC5.png</key>
+            <key type="filename">textures/puffC6.png</key>
+            <key type="filename">textures/puffC7.png</key>
+            <key type="filename">textures/puffD1.png</key>
+            <key type="filename">textures/puffD2.png</key>
+            <key type="filename">textures/puffD3.png</key>
+            <key type="filename">textures/puffD4.png</key>
+            <key type="filename">textures/puffD5.png</key>
+            <key type="filename">textures/puffD6.png</key>
+            <key type="filename">textures/puffD7.png</key>
+            <key type="filename">textures/puffE1.png</key>
+            <key type="filename">textures/puffE2.png</key>
+            <key type="filename">textures/puffE3.png</key>
+            <key type="filename">textures/puffE4.png</key>
+            <key type="filename">textures/puffE5.png</key>
+            <key type="filename">textures/puffE6.png</key>
+            <key type="filename">textures/puffE7.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -1,4 +1,4 @@
-import { Scene } from 'phaser-component-framework';
+import { Scene } from 'phaser-node-framework';
 
 export class DefaultScene extends Scene {
   public preload(): void {
@@ -6,7 +6,8 @@ export class DefaultScene extends Scene {
   }
 
   public init(): void {
-    this.addComponent('player');
-    this.addComponent('camera');
+    this.addNode('camera');
+    this.addNode('map', { name: 'debugMap' });
+    this.addNode('player');
   }
 }

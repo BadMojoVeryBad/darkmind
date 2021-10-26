@@ -1,4 +1,4 @@
-import { injectable } from 'phaser-component-framework';
+import { injectable } from 'phaser-node-framework';
 
 @injectable()
 export class Context {

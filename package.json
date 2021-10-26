@@ -14,7 +14,7 @@
     "license": "MIT",
     "homepage": "https://github.com/BadMojoVeryBad/darkmind#readme",
     "dependencies": {
-        "phaser-component-framework": "https://github.com/BadMojoVeryBad/phaser-component-framework.git#master",
+        "phaser-node-framework": "https://github.com/BadMojoVeryBad/phaser-node-framework.git#master",
         "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {

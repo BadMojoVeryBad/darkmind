@@ -4972,9 +4972,9 @@ path@^0.12.7:
     process "^0.11.1"
     util "^0.10.3"
 
-"phaser-component-framework@https://github.com/BadMojoVeryBad/phaser-component-framework.git#master":
+"phaser-node-framework@https://github.com/BadMojoVeryBad/phaser-node-framework.git#master":
   version "0.0.0"
-  resolved "https://github.com/BadMojoVeryBad/phaser-component-framework.git#26e25deddf46b9d47c67ab92f5b55fa926c37006"
+  resolved "https://github.com/BadMojoVeryBad/phaser-node-framework.git#a3aa17fcacd090dbef12c1b1b2e19104861b77dd"
   dependencies:
     "@billjs/event-emitter" "^1.0.3"
     inversify "^5.0.1"
