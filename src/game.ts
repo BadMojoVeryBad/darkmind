@@ -14,6 +14,7 @@ import { MathServiceInterface } from './services/mathServiceInterface';
 import { MathService } from './services/mathService';
 import { DashingState } from './states/playerStates/dashingState';
 import { CONSTANTS } from './constants';
+import { CharacterLight } from './nodes/characterLight';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -27,6 +28,7 @@ game.registerScene('default', DefaultScene);
 
 // Register components.
 game.registerNode('player', PlayerNode);
+game.registerNode('characterLight', CharacterLight);
 game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
 game.registerNode('islandParticles', IslandParticles);
@@ -35,10 +37,6 @@ game.registerNode('islandParticles', IslandParticles);
 game.registerAsset('tiles', 'assets/tiles/main.png');
 game.registerAsset('debugMap', 'assets/maps/debug.json');
 game.registerAsset('textures', 'assets/textures.png', 'assets/textures.json');
-
-// for (let i = 0; i < 200; i++) {
-//   game.registerAsset('tiles' + i, 'assets/tiles/main.png');
-// }
 
 // Register animations.
 game.registerAnimation('textures', 'playerIdleUp', 1, 6, true, 12);

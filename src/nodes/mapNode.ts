@@ -8,6 +8,8 @@ export class MapNode extends Node {
   private name = '';
   private map: Phaser.Tilemaps.Tilemap;
   private collider: Phaser.Physics.Arcade.Collider;
+  private updated = false;
+  private mask: Phaser.GameObjects.RenderTexture;
 
   constructor() {
     super();
@@ -26,32 +28,28 @@ export class MapNode extends Node {
     collisionLayer.setVisible(false);
     maskLayer.setVisible(false);
     collisionLayer.setCollision([6]);
+
     this.scene.events.on('playerCreated', (player: Phaser.Physics.Arcade.Sprite) => {
       this.collider = this.scene.physics.add.collider(player, collisionLayer);
-      // this.collider.overlapOnly = true;
-      // const overlap = this.scene.physics.add.overlap(player, collisionLayer);
-      // console.log(overlap.ove);
+      this.scene.events.emit('playerMapColliderCreated', this.collider);
     });
 
-    this.scene.events.on('playerMapCollider', (active: true) => {
-      this.collider.active = active;
-    });
-
-    this.scene.events.on('maskCreated', (mask: Phaser.GameObjects.RenderTexture) => {
-      maskLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
-        if (tile.index >= 0) {
-          const image = tiles.image;
-          const coordinates = tiles.getTileTextureCoordinates(tile.index) as ({ x: number, y: number } | null);
-          image.add('mask' + tile.index, 0, coordinates.x, coordinates.y, 16, 16);
-          mask.draw(this.scene.make.image({
-            x: (tile.x * 16) + 8,
-            y: (tile.y * 16) + 8,
-            key: image,
-            frame: 'mask' + tile.index,
-            add: true
-          }));
-        }
-      });
+    // Create a mask that shows only 'land' tiles.
+    this.mask = this.scene.add.renderTexture(0, 0, 400, 1600);
+    this.mask.setVisible(false);
+    maskLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
+      if (tile.index >= 0) {
+        const image = tiles.image;
+        const coordinates = tiles.getTileTextureCoordinates(tile.index) as ({ x: number, y: number } | null);
+        image.add('mask' + tile.index, 0, coordinates.x, coordinates.y, 16, 16);
+        this.mask.draw(this.scene.make.image({
+          x: (tile.x * 16) + 8,
+          y: (tile.y * 16) + 8,
+          key: image,
+          frame: 'mask' + tile.index,
+          add: true
+        }));
+      }
     });
 
     // Debug graphics.
@@ -78,6 +76,18 @@ export class MapNode extends Node {
     }
 
     this.scene.events.emit('mapCreated', this.map);
+  }
+
+  public update() {
+    if (!this.updated) {
+      this.updated = true;
+
+      // Emit the mask so that others can add to it.
+      this.scene.events.emit('maskRenderTextureCreated', this.mask);
+
+      // Create a mask with the render texture and emit it.
+      this.scene.events.emit('maskCreated', this.mask.createBitmapMask());
+    }
   }
 
   public destroy(): void {
