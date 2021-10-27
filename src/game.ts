@@ -10,6 +10,7 @@ import { NodeStateInterface } from './states/NodeStateInterface';
 import { PlayerContext } from './states/playerStates/PlayerContext';
 import { IdleState } from './states/playerStates/IdleState';
 import { WalkingState } from './states/playerStates/WalkingState';
+import { RunningState } from './states/playerStates/RunningState';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -66,6 +67,7 @@ game.registerControl('DASH', 'Keyboard.32', 'Gamepad.A');
 game.registerService<Context>('context', Context, true);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerWalkingState', WalkingState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
 
 // Start game.
 game.start();

@@ -1,7 +1,6 @@
 import { Node, inject, injectable, ControlsInterface } from 'phaser-node-framework';
 import { Context } from '../contexts/context';
 import { NodeStateInterface } from '../states/NodeStateInterface';
-import { IdleState } from '../states/playerStates/IdleState';
 import { PlayerContext } from '../states/playerStates/PlayerContext';
 
 /**
@@ -22,12 +21,18 @@ export class PlayerNode extends Node {
   private isOverlappingMap = false;
   private isDashing = false;
   private puff: Phaser.GameObjects.Sprite;
-
-  constructor(@inject('controls') private controls: ControlsInterface, @inject('context') private context: Context, @inject('playerIdleState') private state: NodeStateInterface<PlayerContext>) {
+  private state: NodeStateInterface<PlayerContext>;
+  constructor(
+    @inject('controls') private controls: ControlsInterface,
+    @inject('context') private context: Context,
+    @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
+    @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
+  ) {
     super();
   }
 
   public init() {
+    this.state = this.idleState;
     this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
       this.mapCollision = map.getLayer('collision').tilemapLayer;
       this.mapCollision.setCollision([6]);
@@ -133,7 +138,7 @@ export class PlayerNode extends Node {
   }
 
   public update(time: number, delta: number): void {
-    // Get variables.
+    /*// Get variables.
     const inputVector = new Phaser.Math.Vector2(
       this.easeOutCubic(this.controls.isActive('RIGHT')) - this.easeOutCubic(this.controls.isActive('LEFT')),
       this.easeOutCubic(this.controls.isActive('DOWN')) - this.easeOutCubic(this.controls.isActive('UP'))
@@ -214,10 +219,14 @@ export class PlayerNode extends Node {
     //   const overlap2 = this.scene.physics.world.overlap(this.player, this.mapCollision);
     //   console.log(overlap2);
     // }
-    // console.log(overlap);
+    // console.log(overlap);*/
 
     this.state = this.state.update(time, delta, {
-      name: 'blah'
+      player: this.player,
+      states: [
+        this.idleState,
+        this.runningState
+      ]
     });
   }
 

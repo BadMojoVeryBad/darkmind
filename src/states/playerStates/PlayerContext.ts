@@ -1,3 +1,6 @@
+import { NodeStateInterface } from "../NodeStateInterface";
+
 export type PlayerContext = {
-  name: string
+  player: Phaser.Physics.Arcade.Sprite,
+  states: Array<NodeStateInterface<PlayerContext>>
 };
