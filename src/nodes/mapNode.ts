@@ -5,7 +5,7 @@ import { Node, injectable } from 'phaser-node-framework';
  */
 @injectable()
 export class MapNode extends Node {
-  private name: string = '';
+  private name = '';
   private map: Phaser.Tilemaps.Tilemap;
   private collider: Phaser.Physics.Arcade.Collider;
 
@@ -51,7 +51,7 @@ export class MapNode extends Node {
             add: true
           }));
         }
-      })
+      });
     });
 
     // Debug graphics.

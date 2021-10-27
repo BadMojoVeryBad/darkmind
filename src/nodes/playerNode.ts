@@ -1,7 +1,7 @@
 import { Node, inject, injectable, ControlsInterface } from 'phaser-node-framework';
 import { Context } from '../contexts/context';
-import { NodeStateInterface } from '../states/NodeStateInterface';
-import { PlayerContext } from '../states/playerStates/PlayerContext';
+import { NodeStateInterface } from '../states/nodeStateInterface';
+import { PlayerContext } from '../states/playerStates/playerContext';
 
 /**
  * The player sprite.
@@ -11,22 +11,24 @@ export class PlayerNode extends Node {
   private player: Phaser.Physics.Arcade.Sprite;
   private groundLight: Phaser.GameObjects.Sprite;
   private text: Phaser.GameObjects.BitmapText;
-  private currentAngle: string = 'Side';
+  private currentAngle = 'Side';
   private maskRenderTexture: Phaser.GameObjects.RenderTexture;
   private groundParticles: Phaser.GameObjects.Particles.ParticleEmitter;
-  private needsFootstep: boolean = true;
+  private needsFootstep = true;
   private maskGraphics: Phaser.GameObjects.Graphics;
-  private dashTime: number = 0;
+  private dashTime = 0;
   private mapCollision: Phaser.Tilemaps.TilemapLayer;
   private isOverlappingMap = false;
   private isDashing = false;
   private puff: Phaser.GameObjects.Sprite;
   private state: NodeStateInterface<PlayerContext>;
+  private context: PlayerContext;
+
   constructor(
     @inject('controls') private controls: ControlsInterface,
-    @inject('context') private context: Context,
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
     @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
+    @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>
   ) {
     super();
   }
@@ -135,153 +137,32 @@ export class PlayerNode extends Node {
       lifespan: 500,
     });
     this.groundParticles.start();
+
+    this.context = {
+      player: this.player,
+      currentAngle: 0,
+      dash: {
+        time: 0,
+        vector: new Phaser.Math.Vector2(0, 0)
+      },
+      states: [
+        this.idleState,
+        this.runningState,
+        this.dashingState
+      ]
+    };
   }
 
   public update(time: number, delta: number): void {
-    /*// Get variables.
-    const inputVector = new Phaser.Math.Vector2(
-      this.easeOutCubic(this.controls.isActive('RIGHT')) - this.easeOutCubic(this.controls.isActive('LEFT')),
-      this.easeOutCubic(this.controls.isActive('DOWN')) - this.easeOutCubic(this.controls.isActive('UP'))
-    );
-
-    if (this.controls.isActive('DASH') && this.dashTime + 800 < time) {
-      this.dashTime = time;
-      this.player.anims.setProgress(0);
-    }
-
-    if (this.dashTime + 200 > time) {
-      this.isDashing = true;
-      this.scene.events.emit('playerMapCollider', false);
-    } else {
-      if (this.isDashing && this.isOverlappingMap) {
-        console.log('DEAD!');
-        this.player.visible = false;
-        this.puff.visible = true;
-        this.puff.setPosition(this.player.x, this.player.y);
-        this.puff.anims.play('puffA');
-      }
-      this.isDashing = false;
-      this.scene.events.emit('playerMapCollider', true);
-    }
-
-    if (this.puff.anims.getProgress() === 1) {
-      this.puff.visible = false;
-    }
-
-    const moveSpeed = 60;
-    let playerSpeed = inputVector.length() ? Math.min(1, inputVector.length()) * moveSpeed : 0;
-    playerSpeed = (this.dashTime + 200 > time) ? 120 : playerSpeed;
-    const playerAngle = this.getAngle(inputVector, new Phaser.Math.Vector2(0, 0));
-    const playerVector = this.velocityFromRotation(playerAngle, playerSpeed);
-
-    // Set velocity.
-    this.player.setVelocity(playerVector.x, playerVector.y);
-
     // Debug for now.
     this.text.setText((1000 / delta).toFixed(2));
 
-    // Player flip.
-    if (this.player.body.velocity.x < 0) {
-      this.player.flipX = true;
-    } else if (this.player.body.velocity.x > 0) {
-      this.player.flipX = false;
-    }
-
-    // Set animation based on velocity and angle.
-    let animation = `playerIdle${this.currentAngle}`;
-    if (this.player.body.velocity.x || this.player.body.velocity.y) {
-      this.currentAngle = this.getAngleName(inputVector, new Phaser.Math.Vector2(0, 0));
-
-      if (this.dashTime + 200 > time) {
-        animation = `playerDash${this.currentAngle}`;
-      } else {
-        animation = `playerRunning${this.currentAngle}`;
-      }
-
-      if (this.player.anims.currentFrame.index === 1 && this.needsFootstep) {
-        this.needsFootstep = false;
-        this.groundParticles.explode(10, this.player.x, this.player.y + 12);
-      } else if (this.player.anims.currentFrame.index !== 1) {
-        this.needsFootstep = true;
-      }
-    }
-
-    const current = this.player.anims.getName();
-    if (current !== animation) {
-      const progress = this.player.anims.getProgress();
-      this.player.anims.play(animation, true);
-      this.player.anims.setProgress(progress);
-    }
-
-    // console.log(this.mapCollision.getTileAtWorldXY(this.player.x, this.player.y));
-    // if (this.mapCollision.getTileAtWorldXY(this.player.x, this.player.y)) {
-    //   const overlap = this.scene.physics.world.overlapTiles(this.player, [this.mapCollision.getTileAtWorldXY(this.player.x, this.player.y)]);
-    //   const overlap2 = this.scene.physics.world.overlap(this.player, this.mapCollision);
-    //   console.log(overlap2);
-    // }
-    // console.log(overlap);*/
-
-    this.state = this.state.update(time, delta, {
-      player: this.player,
-      states: [
-        this.idleState,
-        this.runningState
-      ]
-    });
+    // Update player based on state.
+    this.state = this.state.update(time, delta, this.context);
   }
 
   public destroy(): void {
     this.player.destroy();
     this.text.destroy();
-  }
-
-  private getAngle(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): number {
-    return Math.atan2(vector1.y - vector2.y, vector1.x - vector2.x);
-  }
-
-  private getAngleName(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): string {
-    const radians = Math.atan2(vector1.y - vector2.y, vector1.x - vector2.x);
-    const margin = Math.PI / 8;
-
-    if (radians >= (margin * -4) - margin && radians <= (margin * -4) + margin) {
-      return 'Up';
-    }
-
-    if (radians >= (margin * -2) - margin && radians <= (margin * -2) + margin ||
-      radians >= (margin * -6) - margin && radians <= (margin * -6) + margin) {
-      return 'DiagonalUp';
-    }
-
-    if (radians >= (margin * 0) - margin && radians <= (margin * 0) + margin ||
-      radians >= (margin * 8) - margin && radians <= (margin * 8) + margin) {
-      return 'Side';
-    }
-
-    if (radians >= (margin * 2) - margin && radians <= (margin * 2) + margin ||
-      radians >= (margin * 6) - margin && radians <= (margin * 6) + margin) {
-      return 'DiagonalDown';
-    }
-
-    if (radians >= (margin * 4) - margin && radians <= (margin * 4) + margin) {
-      return 'Down';
-    }
-
-    return 'Side';
-  }
-
-  private velocityFromRotation(rotation: number, speed = 60, vec2: Phaser.Math.Vector2 = new Phaser.Math.Vector2()): Phaser.Math.Vector2 {
-    return vec2.setToPolar(rotation, speed);
-  }
-
-  private easeOutCubic(x: number): number {
-    if (x > 1) {
-      return 1;
-    }
-
-    if (x < 0) {
-      return 0;
-    }
-
-    return 1 - Math.pow(1 - x, 3);
   }
 }

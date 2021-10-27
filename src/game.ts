@@ -6,11 +6,14 @@ import { Context } from './contexts/context';
 import { CameraNode } from './nodes/cameraNode';
 import { MapNode } from './nodes/mapNode';
 import { IslandParticles } from './nodes/islandParticles';
-import { NodeStateInterface } from './states/NodeStateInterface';
-import { PlayerContext } from './states/playerStates/PlayerContext';
-import { IdleState } from './states/playerStates/IdleState';
-import { WalkingState } from './states/playerStates/WalkingState';
-import { RunningState } from './states/playerStates/RunningState';
+import { NodeStateInterface } from './states/nodeStateInterface';
+import { PlayerContext } from './states/playerStates/playerContext';
+import { IdleState } from './states/playerStates/idleState';
+import { RunningState } from './states/playerStates/runningState';
+import { MathServiceInterface } from './services/mathServiceInterface';
+import { MathService } from './services/mathService';
+import { DashingState } from './states/playerStates/dashingState';
+import { CONSTANTS } from './constants';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -61,12 +64,13 @@ game.registerControl('UP', 'Keyboard.38', 'Gamepad.UP', 'Gamepad.STICK_LEFT_UP')
 game.registerControl('DOWN', 'Keyboard.40', 'Gamepad.DOWN', 'Gamepad.STICK_LEFT_DOWN');
 game.registerControl('LEFT', 'Keyboard.37', 'Gamepad.LEFT', 'Gamepad.STICK_LEFT_LEFT');
 game.registerControl('RIGHT', 'Keyboard.39', 'Gamepad.RIGHT', 'Gamepad.STICK_LEFT_RIGHT');
-game.registerControl('DASH', 'Keyboard.32', 'Gamepad.A');
+game.registerControl(CONSTANTS.CONTROL_DASH, 'Keyboard.32', 'Gamepad.A');
 
 // Register services.
 game.registerService<Context>('context', Context, true);
+game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
-game.registerService<NodeStateInterface<PlayerContext>>('playerWalkingState', WalkingState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
 
 // Start game.
