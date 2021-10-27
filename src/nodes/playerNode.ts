@@ -1,5 +1,8 @@
 import { Node, inject, injectable, ControlsInterface } from 'phaser-node-framework';
 import { Context } from '../contexts/context';
+import { NodeStateInterface } from '../states/NodeStateInterface';
+import { IdleState } from '../states/playerStates/IdleState';
+import { PlayerContext } from '../states/playerStates/PlayerContext';
 
 /**
  * The player sprite.
@@ -20,7 +23,7 @@ export class PlayerNode extends Node {
   private isDashing = false;
   private puff: Phaser.GameObjects.Sprite;
 
-  constructor(@inject('controls') private controls: ControlsInterface, @inject('context') private context: Context) {
+  constructor(@inject('controls') private controls: ControlsInterface, @inject('context') private context: Context, @inject('playerIdleState') private state: NodeStateInterface<PlayerContext>) {
     super();
   }
 
@@ -212,6 +215,10 @@ export class PlayerNode extends Node {
     //   console.log(overlap2);
     // }
     // console.log(overlap);
+
+    this.state = this.state.update(time, delta, {
+      name: 'blah'
+    });
   }
 
   public destroy(): void {

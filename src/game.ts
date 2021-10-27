@@ -6,6 +6,10 @@ import { Context } from './contexts/context';
 import { CameraNode } from './nodes/cameraNode';
 import { MapNode } from './nodes/mapNode';
 import { IslandParticles } from './nodes/islandParticles';
+import { NodeStateInterface } from './states/NodeStateInterface';
+import { PlayerContext } from './states/playerStates/PlayerContext';
+import { IdleState } from './states/playerStates/IdleState';
+import { WalkingState } from './states/playerStates/WalkingState';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -60,6 +64,8 @@ game.registerControl('DASH', 'Keyboard.32', 'Gamepad.A');
 
 // Register services.
 game.registerService<Context>('context', Context, true);
+game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerWalkingState', WalkingState);
 
 // Start game.
 game.start();
