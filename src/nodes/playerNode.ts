@@ -56,50 +56,17 @@ export class PlayerNode extends Node {
       this.context.player.isOverlappingMap = map.index >= 0;
     });
 
+    // TODO: Death and respawn.
     // this.puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
     // this.puff.visible = false;
 
-
-
-    // this.scene.events.emit('maskCreated', this.maskRenderTexture);
-
-    // TODO: Create a light particle node. Or add it to character light.
-    // const lightParticles = this.scene.add.particles('textures', 'lightestPixel');
-    // lightParticles.setDepth(40);
-    // const lightParticlesEmitter = lightParticles.createEmitter({
-    //   alpha: 1,
-    //   speedX: { min: 0, max: 0 },
-    //   speedY: { min: -10, max: -10 },
-    //   gravityY: 0,
-    //   quantity: 1,
-    //   frequency: 100,
-    //   lifespan: 10000,
-    //   emitZone: {
-    //     type: 'random',
-    //     source: new Phaser.Geom.Rectangle(-64, -64, 128, 128),
-    //     quantity: 20,
-    //     stepRate: 0,
-    //     yoyo: false,
-    //     seamless: true,
-    //   },
-    // });
-    // lightParticlesEmitter.start();
-    // lightParticlesEmitter.setPosition(0, 0);
-    // lightParticlesEmitter.setScrollFactor(1);
-    // this.maskGraphics = this.scene.make.graphics({
-    //   lineStyle: {
-    //     width: 0,
-    //     color: 0xffffff,
-    //     alpha: 1
-    //   },
-    //   fillStyle: {
-    //     color: 0x000000,
-    //     alpha: 1
-    //   },
-    // });
-
     // Create the light on the ground that follows around the player.
     this.addNode('characterLight', {
+      'follow': player
+    });
+
+    // Create the light particles that follow the player around.
+    this.addNode('lightParticles', {
       'follow': player
     });
 
@@ -117,19 +84,14 @@ export class PlayerNode extends Node {
     });
 
     // Create context using all created things for this node.
-    // TODO: Flatten this.
     this.context = {
-      player: {
-        sprite: player,
-        footsteps: footsteps,
-        hasStepped: true,
-        isOverlappingMap: false,
-        angle: 0,
-      },
-      dash: {
-        time: 0,
-        vector: new Phaser.Math.Vector2(0, 0)
-      },
+      player: player,
+      footsteps: footsteps,
+      hasStepped: true,
+      isOverlappingMap: false,
+      angle: 0,
+      dashTime: 0,
+      dashVector: new Phaser.Math.Vector2(0, 0),
       states: [
         this.idleState,
         this.runningState,

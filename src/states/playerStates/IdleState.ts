@@ -22,9 +22,9 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
     );
 
     // Transition to dashing state if the dash control is active.
-    if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dash.time + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
-      context.dash.time = time;
-      context.dash.vector = this.mathService.radiansToVector(context.player.angle);
+    if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dashTime + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
+      context.dashTime = time;
+      context.dashVector = this.mathService.radiansToVector(context.player.angle);
       const dashState = context.states.find((state) => state.getName() === 'dashing');
       return dashState.update(time, delta, context);
     }
@@ -36,17 +36,17 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
     }
 
     // Set velocity.
-    context.player.sprite.setVelocity(0, 0);
+    context.player.setVelocity(0, 0);
 
     // Set running animation.
     const currentAngle = this.mathService.angleName(context.player.angle);
-    context.player.sprite.anims.play(`playerIdle${currentAngle}`, true);
+    context.player.anims.play(`playerIdle${currentAngle}`, true);
 
     // Player flip.
-    if (context.player.sprite.body.velocity.x < 0) {
-      context.player.sprite.flipX = true;
-    } else if (context.player.sprite.body.velocity.x > 0) {
-      context.player.sprite.flipX = false;
+    if (context.player.body.velocity.x < 0) {
+      context.player.flipX = true;
+    } else if (context.player.body.velocity.x > 0) {
+      context.player.flipX = false;
     }
 
     return this;

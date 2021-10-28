@@ -17,30 +17,30 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
 
   update(time: number, delta: number, context: PlayerContext): NodeStateInterface<PlayerContext> {
     // Transition to running state if dash ends.
-    if (context.dash.time + CONSTANTS.PLAYER_DASH_TIME < time) {
+    if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
       const runningState = context.states.find((state) => state.getName() === 'running');
       return runningState.update(time, delta, context);
     }
 
     // Set the velocity.
     const playerSpeed = CONSTANTS.PLAYER_DASH_SPEED;
-    const playerAngle = this.mathService.vectorToRadians(context.dash.vector, new Phaser.Math.Vector2(0, 0));
+    const playerAngle = this.mathService.vectorToRadians(context.dashVector, new Phaser.Math.Vector2(0, 0));
     const playerVector = this.mathService.velocityFromRotation(playerAngle, playerSpeed);
-    context.player.sprite.setVelocity(playerVector.x, playerVector.y);
+    context.player.setVelocity(playerVector.x, playerVector.y);
 
     // Set running animation.
-    const currentAngle = this.mathService.angleNameFromPoints(context.dash.vector, new Phaser.Math.Vector2(0, 0));
+    const currentAngle = this.mathService.angleNameFromPoints(context.dashVector, new Phaser.Math.Vector2(0, 0));
     context.player.angle = playerAngle;
-    context.player.sprite.anims.play(`playerDash${currentAngle}`, true);
+    context.player.anims.play(`playerDash${currentAngle}`, true);
 
     // Player flip.
-    if (context.player.sprite.body.velocity.x < 0) {
-      context.player.sprite.flipX = true;
-    } else if (context.player.sprite.body.velocity.x > 0) {
-      context.player.sprite.flipX = false;
+    if (context.player.body.velocity.x < 0) {
+      context.player.flipX = true;
+    } else if (context.player.body.velocity.x > 0) {
+      context.player.flipX = false;
     }
 
-    context.player.footsteps.explode(10, context.player.sprite.x, context.player.sprite.y + 12);
+    context.footsteps.explode(10, context.player.x, context.player.y + 12);
 
     return this;
   }

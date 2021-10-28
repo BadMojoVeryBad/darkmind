@@ -15,6 +15,7 @@ import { MathService } from './services/mathService';
 import { DashingState } from './states/playerStates/dashingState';
 import { CONSTANTS } from './constants';
 import { CharacterLight } from './nodes/characterLight';
+import { LightParticles } from './nodes/lightParticles';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -32,6 +33,7 @@ game.registerNode('characterLight', CharacterLight);
 game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
 game.registerNode('islandParticles', IslandParticles);
+game.registerNode('lightParticles', LightParticles);
 
 // Register assets.
 game.registerAsset('tiles', 'assets/tiles/main.png');

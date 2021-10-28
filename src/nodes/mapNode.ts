@@ -8,7 +8,6 @@ export class MapNode extends Node {
   private name = '';
   private map: Phaser.Tilemaps.Tilemap;
   private collider: Phaser.Physics.Arcade.Collider;
-  private updated = false;
   private mask: Phaser.GameObjects.RenderTexture;
 
   constructor() {
@@ -78,16 +77,12 @@ export class MapNode extends Node {
     this.scene.events.emit('mapCreated', this.map);
   }
 
-  public update() {
-    if (!this.updated) {
-      this.updated = true;
+  public created(): void {
+    // Emit the mask so that others can add to it.
+    this.scene.events.emit('maskRenderTextureCreated', this.mask);
 
-      // Emit the mask so that others can add to it.
-      this.scene.events.emit('maskRenderTextureCreated', this.mask);
-
-      // Create a mask with the render texture and emit it.
-      this.scene.events.emit('maskCreated', this.mask.createBitmapMask());
-    }
+    // Create a mask with the render texture and emit it.
+    this.scene.events.emit('maskCreated', this.mask.createBitmapMask());
   }
 
   public destroy(): void {
