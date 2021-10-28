@@ -8,22 +8,8 @@ import { PlayerContext } from '../states/playerStates/playerContext';
 @injectable()
 export class PlayerNode extends Node {
   private player: Phaser.Physics.Arcade.Sprite;
-  private groundLight: Phaser.GameObjects.Sprite;
-  private text: Phaser.GameObjects.BitmapText;
-  private currentAngle = 'Side';
-  private maskRenderTexture: Phaser.GameObjects.RenderTexture;
-  private groundParticles: Phaser.GameObjects.Particles.ParticleEmitter;
-  private needsFootstep = true;
-  private maskGraphics: Phaser.GameObjects.Graphics;
-  private dashTime = 0;
-  private mapCollision: Phaser.Tilemaps.TilemapLayer;
-  private isOverlappingMap = false;
-  private isDashing = false;
-  private puff: Phaser.GameObjects.Sprite;
   private state: NodeStateInterface<PlayerContext>;
   private context: PlayerContext;
-
-  private mapMask: Phaser.Display.Masks.BitmapMask;
 
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
@@ -35,10 +21,6 @@ export class PlayerNode extends Node {
 
   public init() {
     this.state = this.idleState;
-    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
-      this.mapCollision = map.getLayer('collision').tilemapLayer;
-      this.mapCollision.setCollision([6]);
-    });
   }
 
   public create(): void {
@@ -47,14 +29,6 @@ export class PlayerNode extends Node {
     player.setSize(4, 4);
     player.setOffset(14, 25);
     player.setDepth(50);
-
-    // TODO: Redo jumping between platforms.
-    // Collision event.
-    this.scene.physics.add.overlap(player, this.mapCollision, (player, map) => {
-      // This property exists. You just have to trust me.
-      // @ts-ignore
-      this.context.player.isOverlappingMap = map.index >= 0;
-    });
 
     // TODO: Death and respawn.
     // this.puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
@@ -92,6 +66,7 @@ export class PlayerNode extends Node {
       angle: 0,
       dashTime: 0,
       dashVector: new Phaser.Math.Vector2(0, 0),
+      mapCollider: null,
       states: [
         this.idleState,
         this.runningState,
@@ -99,8 +74,21 @@ export class PlayerNode extends Node {
       ]
     };
 
+    // Set map collision stuff when the map gets created.
+    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
+      const collisionLayer = map.getLayer('collision').tilemapLayer;
+      this.context.mapCollider = this.scene.physics.add.collider(player, collisionLayer);
+      this.scene.physics.add.overlap(player, collisionLayer, (player, map) => {
+        // This property exists. You just have to trust me.
+        // @ts-ignore
+        this.context.player.isOverlappingMap = map.index >= 0;
+      });
+    });
+  }
+
+  public created(): void {
     // Emit events for other nodes.
-    this.scene.events.emit('playerCreated', player);
+    this.scene.events.emit('playerCreated', this.context.player);
   }
 
   public update(time: number, delta: number): void {
@@ -110,6 +98,5 @@ export class PlayerNode extends Node {
 
   public destroy(): void {
     this.player.destroy();
-    this.text.destroy();
   }
 }

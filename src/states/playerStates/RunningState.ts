@@ -45,7 +45,7 @@ export class RunningState implements NodeStateInterface<PlayerContext> {
 
     // Set running animation.
     const currentAngle = this.mathService.angleNameFromPoints(inputVector, new Phaser.Math.Vector2(0, 0));
-    context.player.angle = playerAngle;
+    context.angle = playerAngle;
     context.player.anims.play(`playerRunning${currentAngle}`, true);
 
     // Player flip.

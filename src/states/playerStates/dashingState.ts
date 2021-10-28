@@ -16,8 +16,12 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
   }
 
   update(time: number, delta: number, context: PlayerContext): NodeStateInterface<PlayerContext> {
+    // Don't collide with map while dashing.
+    context.mapCollider.active = false;
+
     // Transition to running state if dash ends.
     if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
+      context.mapCollider.active = true;
       const runningState = context.states.find((state) => state.getName() === 'running');
       return runningState.update(time, delta, context);
     }
@@ -28,9 +32,8 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
     const playerVector = this.mathService.velocityFromRotation(playerAngle, playerSpeed);
     context.player.setVelocity(playerVector.x, playerVector.y);
 
-    // Set running animation.
+    // Set dashing animation.
     const currentAngle = this.mathService.angleNameFromPoints(context.dashVector, new Phaser.Math.Vector2(0, 0));
-    context.player.angle = playerAngle;
     context.player.anims.play(`playerDash${currentAngle}`, true);
 
     // Player flip.

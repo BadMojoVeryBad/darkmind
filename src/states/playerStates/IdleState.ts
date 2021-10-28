@@ -24,7 +24,7 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
     // Transition to dashing state if the dash control is active.
     if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dashTime + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
       context.dashTime = time;
-      context.dashVector = this.mathService.radiansToVector(context.player.angle);
+      context.dashVector = this.mathService.radiansToVector(context.angle);
       const dashState = context.states.find((state) => state.getName() === 'dashing');
       return dashState.update(time, delta, context);
     }

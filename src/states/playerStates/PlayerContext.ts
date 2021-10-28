@@ -8,5 +8,6 @@ export type PlayerContext = {
   angle: number
   dashTime: number,
   dashVector: Phaser.Math.Vector2,
+  mapCollider: Phaser.Physics.Arcade.Collider;
   states: Array<NodeStateInterface<PlayerContext>>
 };
