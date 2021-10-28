@@ -16,6 +16,7 @@ import { DashingState } from './states/playerStates/dashingState';
 import { CONSTANTS } from './constants';
 import { CharacterLight } from './nodes/characterLight';
 import { LightParticles } from './nodes/lightParticles';
+import { DeadState } from './states/playerStates/deadState';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -72,6 +73,7 @@ game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadState);
 
 // Start game.
 game.start();

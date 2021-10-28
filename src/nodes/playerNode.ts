@@ -14,12 +14,13 @@ export class PlayerNode extends Node {
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
     @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
+    @inject('playerDeadState') private deadState: NodeStateInterface<PlayerContext>,
     @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>
   ) {
     super();
   }
 
-  public init() {
+  public init(): void {
     this.state = this.idleState;
   }
 
@@ -31,8 +32,8 @@ export class PlayerNode extends Node {
     player.setDepth(50);
 
     // TODO: Death and respawn.
-    // this.puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
-    // this.puff.visible = false;
+    const puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
+    puff.visible = false;
 
     // Create the light on the ground that follows around the player.
     this.addNode('characterLight', {
@@ -60,6 +61,8 @@ export class PlayerNode extends Node {
     // Create context using all created things for this node.
     this.context = {
       player: player,
+      lastSafePosition: new Phaser.Math.Vector2(160, 1440),
+      deathAnimation: puff,
       footsteps: footsteps,
       hasStepped: true,
       isOverlappingMap: false,
@@ -70,7 +73,8 @@ export class PlayerNode extends Node {
       states: [
         this.idleState,
         this.runningState,
-        this.dashingState
+        this.dashingState,
+        this.deadState
       ]
     };
 
@@ -79,9 +83,10 @@ export class PlayerNode extends Node {
       const collisionLayer = map.getLayer('collision').tilemapLayer;
       this.context.mapCollider = this.scene.physics.add.collider(player, collisionLayer);
       this.scene.physics.add.overlap(player, collisionLayer, (player, map) => {
+        console.log(map);
         // This property exists. You just have to trust me.
         // @ts-ignore
-        this.context.player.isOverlappingMap = map.index >= 0;
+        this.context.isOverlappingMap = map.index >= 0;
       });
     });
   }
@@ -94,6 +99,8 @@ export class PlayerNode extends Node {
   public update(time: number, delta: number): void {
     // Update player based on state.
     this.state = this.state.update(time, delta, this.context);
+
+    // console.log(this.context.isOverlappingMap);
   }
 
   public destroy(): void {

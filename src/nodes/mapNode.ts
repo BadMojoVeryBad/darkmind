@@ -13,7 +13,7 @@ export class MapNode extends Node {
     super();
   }
 
-  public init(data: Record<string, string>) {
+  public init(data: Record<string, string>): void {
     this.name = data.name;
   }
 

@@ -39,7 +39,7 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
     context.player.setVelocity(0, 0);
 
     // Set running animation.
-    const currentAngle = this.mathService.angleName(context.player.angle);
+    const currentAngle = this.mathService.angleName(context.angle);
     context.player.anims.play(`playerIdle${currentAngle}`, true);
 
     // Player flip.

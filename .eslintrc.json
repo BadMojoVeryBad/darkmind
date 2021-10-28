@@ -13,6 +13,7 @@
     "@typescript-eslint/semi": [ "error" ],
     "quotes": [2, "single", { "avoidEscape": true }],
     "indent": ["error", 2],
-    "space-before-function-paren": ["error", "never"]
+    "space-before-function-paren": ["error", "never"],
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

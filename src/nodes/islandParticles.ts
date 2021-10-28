@@ -15,7 +15,7 @@ export class IslandParticles extends Node {
     super();
   }
 
-  public init(data: Record<string, string>) {
+  public init(data: Record<string, string>): void {
     this.x = Number.parseInt(data.x);
     this.y = Number.parseInt(data.y);
     this.width = Number.parseInt(data.width);

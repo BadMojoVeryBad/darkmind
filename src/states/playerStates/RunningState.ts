@@ -37,6 +37,11 @@ export class RunningState implements NodeStateInterface<PlayerContext> {
       return idleState.update(time, delta, context);
     }
 
+    // Used for respawning.
+    if (!context.isOverlappingMap) {
+      context.lastSafePosition = new Phaser.Math.Vector2(context.player.x, context.player.y);
+    }
+
     // Set the velocity.
     const playerSpeed = Math.min(1, inputVector.length()) * CONSTANTS.PLAYER_SPEED;
     const playerAngle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));

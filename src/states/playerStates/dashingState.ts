@@ -22,8 +22,16 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
     // Transition to running state if dash ends.
     if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
       context.mapCollider.active = true;
-      const runningState = context.states.find((state) => state.getName() === 'running');
-      return runningState.update(time, delta, context);
+      const nextStateName = (context.isOverlappingMap) ? 'dead' : 'running';
+
+      if (nextStateName === 'dead') {
+        context.deathAnimation.setPosition(context.player.x, context.player.y);
+        context.deathAnimation.visible = true;
+        context.deathAnimation.anims.play('puffA');
+      }
+
+      const nextState = context.states.find((state) => state.getName() === nextStateName);
+      return nextState.update(time, delta, context);
     }
 
     // Set the velocity.
