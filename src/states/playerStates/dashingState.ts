@@ -35,7 +35,7 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
     }
 
     // Set the velocity.
-    const playerSpeed = CONSTANTS.PLAYER_DASH_SPEED;
+    const playerSpeed = (this.mathService.angleName(context.angle).includes('Diagonal')) ? CONSTANTS.PLAYER_DASH_SPEED_DIAGONAL : CONSTANTS.PLAYER_DASH_SPEED;
     const playerAngle = this.mathService.vectorToRadians(context.dashVector, new Phaser.Math.Vector2(0, 0));
     const playerVector = this.mathService.velocityFromRotation(playerAngle, playerSpeed);
     context.player.setVelocity(playerVector.x, playerVector.y);

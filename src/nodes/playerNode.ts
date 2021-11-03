@@ -1,4 +1,6 @@
-import { Node, inject, injectable } from 'phaser-node-framework';
+import { Node, inject, injectable, ControlsInterface } from 'phaser-node-framework';
+import { CONSTANTS } from '../constants';
+import { MathServiceInterface } from '../services/mathServiceInterface';
 import { NodeStateInterface } from '../states/nodeStateInterface';
 import { PlayerContext } from '../states/playerStates/playerContext';
 
@@ -10,12 +12,15 @@ export class PlayerNode extends Node {
   private player: Phaser.Physics.Arcade.Sprite;
   private state: NodeStateInterface<PlayerContext>;
   private context: PlayerContext;
+  private text: Phaser.GameObjects.Text;
 
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
     @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
     @inject('playerDeadState') private deadState: NodeStateInterface<PlayerContext>,
-    @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>
+    @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>,
+    @inject('controls') private controls: ControlsInterface,
+    @inject('mathService') private mathService: MathServiceInterface
   ) {
     super();
   }
@@ -58,6 +63,10 @@ export class PlayerNode extends Node {
       lifespan: 500,
     });
 
+    this.text = this.scene.add.text(10, 10, 'debug');
+    this.text.setScrollFactor(0);
+    this.text.setDepth(1000);
+
     // Create context using all created things for this node.
     this.context = {
       player: player,
@@ -83,7 +92,6 @@ export class PlayerNode extends Node {
       const collisionLayer = map.getLayer('collision').tilemapLayer;
       this.context.mapCollider = this.scene.physics.add.collider(player, collisionLayer);
       this.scene.physics.add.overlap(player, collisionLayer, (player, map) => {
-        console.log(map);
         // This property exists. You just have to trust me.
         // @ts-ignore
         this.context.isOverlappingMap = map.index >= 0;
@@ -99,8 +107,6 @@ export class PlayerNode extends Node {
   public update(time: number, delta: number): void {
     // Update player based on state.
     this.state = this.state.update(time, delta, this.context);
-
-    // console.log(this.context.isOverlappingMap);
   }
 
   public destroy(): void {

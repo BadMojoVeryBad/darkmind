@@ -15,51 +15,53 @@ export class MathService implements MathServiceInterface {
     return 1 - Math.pow(1 - num, 3);
   }
 
-  vectorToRadians(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): number {
+  public vectorToRadians(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): number {
     return Math.atan2(vector1.y - vector2.y, vector1.x - vector2.x);
   }
 
-  radiansToVector(radians: number): Phaser.Math.Vector2 {
+  public radiansToVector(radians: number): Phaser.Math.Vector2 {
     return new Phaser.Math.Vector2(
       Math.cos(radians),
       Math.sin(radians)
     );
   }
 
-  angleNameFromPoints(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): string {
+  public angleNameFromPoints(vector1: Phaser.Math.Vector2, vector2: Phaser.Math.Vector2): string {
     return this.angleName(this.vectorToRadians(vector1, vector2));
   }
 
-  angleName(radians: number): string {
-    const margin = Math.PI / 8;
+  public angleName(radians: number): string {
+    const multiple = Math.PI / 4;
+    const animationAngle = this.closestMultiple(radians, multiple);
 
-    if (radians >= (margin * -4) - margin && radians <= (margin * -4) + margin) {
+    if (animationAngle === Math.PI / 2 * -1) {
       return 'Up';
     }
 
-    if (radians >= (margin * -2) - margin && radians <= (margin * -2) + margin ||
-      radians >= (margin * -6) - margin && radians <= (margin * -6) + margin) {
-      return 'DiagonalUp';
+    if (animationAngle === Math.PI / 2) {
+      return 'Down';
     }
 
-    if (radians >= (margin * 0) - margin && radians <= (margin * 0) + margin ||
-      radians >= (margin * 8) - margin && radians <= (margin * 8) + margin) {
+    if (animationAngle === Math.PI || animationAngle === 0 || animationAngle === Math.PI * -1) {
       return 'Side';
     }
 
-    if (radians >= (margin * 2) - margin && radians <= (margin * 2) + margin ||
-      radians >= (margin * 6) - margin && radians <= (margin * 6) + margin) {
+    if (animationAngle === Math.PI / 4 || animationAngle === (Math.PI / 4) * 3) {
       return 'DiagonalDown';
     }
 
-    if (radians >= (margin * 4) - margin && radians <= (margin * 4) + margin) {
-      return 'Down';
+    if (animationAngle === (Math.PI / 4) * -1 || animationAngle === (Math.PI / 4) * -3) {
+      return 'DiagonalUp';
     }
 
     return 'Side';
   }
 
-  velocityFromRotation(rotation: number, speed = 60, vec2: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0)): Phaser.Math.Vector2 {
+  public velocityFromRotation(rotation: number, speed = 60, vec2: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0)): Phaser.Math.Vector2 {
     return vec2.setToPolar(rotation, speed);
+  }
+
+  public closestMultiple(number: number, multiple: number): number {
+    return Math.round(number / multiple) * multiple;
   }
 }

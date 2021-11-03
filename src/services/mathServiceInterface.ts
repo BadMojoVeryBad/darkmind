@@ -10,4 +10,6 @@ export interface MathServiceInterface {
   velocityFromRotation(rotation: number, speed?: number, vec2?: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
   radiansToVector(radians: number): Phaser.Math.Vector2;
+
+  closestMultiple(number: number, multiple: number): number;
 }
