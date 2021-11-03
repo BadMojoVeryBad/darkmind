@@ -21,10 +21,6 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
       this.controls.isActive('DOWN') - this.controls.isActive('UP')
     );
 
-    // Set angle from input.
-    const playerAngle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));
-    context.angle = playerAngle;
-
     // Transition to dashing state if the dash control is active.
     if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dashTime + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
       context.dashTime = time;
