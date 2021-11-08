@@ -71,8 +71,4 @@ export class RunningState implements NodeStateInterface<PlayerContext> {
 
     return this;
   }
-
-  private closestMultiple(number, multiple) {
-    return Math.round(number / multiple) * multiple;
-  }
 }

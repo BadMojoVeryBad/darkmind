@@ -225,6 +225,17 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">textures/platformIdle1.png</key>
+            <key type="filename">textures/platformIdle2.png</key>
+            <key type="filename">textures/platformIdle3.png</key>
+            <key type="filename">textures/platformIdle4.png</key>
+            <key type="filename">textures/platformIdle5.png</key>
+            <key type="filename">textures/platformIdle6.png</key>
+            <key type="filename">textures/platformIdle7.png</key>
+            <key type="filename">textures/platformIdle8.png</key>
+            <key type="filename">textures/platformTransparent.png</key>
+            <key type="filename">textures/platformWiggling1.png</key>
+            <key type="filename">textures/platformWiggling2.png</key>
             <key type="filename">textures/playerDashDiagonalDown1.png</key>
             <key type="filename">textures/playerDashDiagonalDown2.png</key>
             <key type="filename">textures/playerDashDiagonalDown3.png</key>

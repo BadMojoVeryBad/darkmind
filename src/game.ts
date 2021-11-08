@@ -17,6 +17,9 @@ import { CONSTANTS } from './constants';
 import { CharacterLight } from './nodes/characterLight';
 import { LightParticles } from './nodes/lightParticles';
 import { DeadState } from './states/playerStates/deadState';
+import { Platform } from './nodes/platform';
+import { TilemapStrategyInterface } from './services/tilemapServiceInterface';
+import { TilemapService } from './services/tilemapService';
 
 // Create a game.
 const game = Game.create(240, 135, {
@@ -35,6 +38,7 @@ game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
 game.registerNode('islandParticles', IslandParticles);
 game.registerNode('lightParticles', LightParticles);
+game.registerNode('platform', Platform);
 
 // Register assets.
 game.registerAsset('tiles', 'assets/tiles/main.png');
@@ -59,6 +63,8 @@ game.registerAnimation('textures', 'playerDashDiagonalUp', 1, 6, false, 24);
 game.registerAnimation('textures', 'playerDashDiagonalDown', 1, 6, false, 24);
 game.registerAnimation('textures', 'groundLight', 1, 12, true, 12);
 game.registerAnimation('textures', 'puffA', 1, 7, false, 24);
+game.registerAnimation('textures', 'platformIdle', 1, 8, true, 12);
+game.registerAnimation('textures', 'platformWiggling', 1, 2, true, 12);
 
 // Register controls.
 game.registerControl('UP', 'Keyboard.38', 'Gamepad.UP', 'Gamepad.STICK_LEFT_UP');
@@ -70,6 +76,7 @@ game.registerControl(CONSTANTS.CONTROL_DASH, 'Keyboard.32', 'Gamepad.A');
 // Register services.
 game.registerService<Context>('context', Context, true);
 game.registerService<MathServiceInterface>('mathService', MathService);
+game.registerService<TilemapStrategyInterface>('tilemapService', TilemapService);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);

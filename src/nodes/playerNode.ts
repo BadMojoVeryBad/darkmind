@@ -36,7 +36,7 @@ export class PlayerNode extends Node {
     player.setOffset(14, 25);
     player.setDepth(50);
 
-    // TODO: Death and respawn.
+    // Death and respawn 'poof'.
     const puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
     puff.visible = false;
 

@@ -1,5 +1,8 @@
 import { Node, injectable } from 'phaser-node-framework';
 
+/**
+ * The light particles that follow the player.
+ */
 @injectable()
 export class LightParticles extends Node {
   private follow: Phaser.GameObjects.Sprite;

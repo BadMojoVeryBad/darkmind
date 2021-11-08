@@ -1,7 +1,7 @@
 import { Node, injectable } from 'phaser-node-framework';
 
 /**
- * The camera that follows the player in-game.
+ * The particles that fall from the islands.
  */
 @injectable()
 export class IslandParticles extends Node {
