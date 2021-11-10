@@ -62,10 +62,10 @@ export class MapNode extends Node {
       collisionLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
         if ([2, 3, 13, 11, 1, 12, 22, 4, 5].includes(tile.index)) {
           rectangles.push({
-            xmin: (tile.x * 16),
-            ymin: (tile.y * 16),
-            xmax: (tile.x * 16) + 16,
-            ymax: (tile.y * 16) + 16
+            xmin: Math.round((tile.x * 16)),
+            ymin: Math.round((tile.y * 16)),
+            xmax: Math.round((tile.x * 16) + 16),
+            ymax: Math.round((tile.y * 16) + 16)
           });
         }
       });

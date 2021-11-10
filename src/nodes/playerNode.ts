@@ -100,9 +100,9 @@ export class PlayerNode extends Node {
           this.colliders.push(this.scene.physics.add.collider(player, rectangle));
         }
 
-        this.colliders.push(this.scene.physics.add.overlap(player, rectangle, (player, map) => {
-          this.context.isOverlappingMap = true;
-        }));
+        // this.colliders.push(this.scene.physics.add.overlap(player, rectangle, (player, map) => {
+        //   this.context.isOverlappingMap = true;
+        // }));
       }
     });
   }

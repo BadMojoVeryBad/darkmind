@@ -86,5 +86,32 @@ game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', Da
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadState);
 
+const rectangeService = new RectangleService();
+
+const rectangles = rectangeService.getNegativeSpaceRectangles(
+  {
+    xmin: 0,
+    xmax: 10,
+    ymin: 0,
+    ymax: 10
+  },
+  [
+    {
+      xmin: 2,
+      xmax: 4,
+      ymin: 2,
+      ymax: 4
+    },
+    {
+      xmin: 3,
+      xmax: 5,
+      ymin: 3,
+      ymax: 5
+    }
+  ]
+);
+
+console.log(rectangles);
+
 // Start game.
 game.start();

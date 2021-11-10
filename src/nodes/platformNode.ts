@@ -69,10 +69,10 @@ export class PlatformNode extends Node {
     this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
       if (!this.isTransparent) {
         rectangles.push({
-          xmin: Math.floor(this.sprite.x - 8),
-          ymin: Math.floor(this.sprite.y - 8),
-          xmax: Math.floor(this.sprite.x + 8),
-          ymax: Math.floor(this.sprite.y + 8)
+          xmin: Math.round(this.sprite.x - 8),
+          ymin: Math.round(this.sprite.y - 8),
+          xmax: Math.round(this.sprite.x + 8),
+          ymax: Math.round(this.sprite.y + 8)
         });
       }
     });
