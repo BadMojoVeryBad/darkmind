@@ -1,11 +1,12 @@
 import { Node, injectable, inject } from 'phaser-node-framework';
+import { Rectangle } from '../services/rectangleServiceInterface';
 import { TilemapStrategyInterface } from '../services/tilemapServiceInterface';
 
 /**
  * The platforms the player jumps to.
  */
 @injectable()
-export class Platform extends Node {
+export class PlatformNode extends Node {
   private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private sprite: Phaser.Physics.Arcade.Sprite;
@@ -37,6 +38,7 @@ export class Platform extends Node {
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, 'textures', 'platformIdle1');
     this.sprite.anims.play('platformIdle');
     this.sprite.setDepth(10);
+    this.sprite.body.setSize(20, 20);
 
     const multiplier = (16 * 16) / 128;
     this.particles = this.scene.add.particles('textures', 'darkPixel');
@@ -64,6 +66,16 @@ export class Platform extends Node {
     // TODO: Add to light mask.
 
     // TODO: Collision.
+    this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
+      if (!this.isTransparent) {
+        rectangles.push({
+          xmin: Math.floor(this.sprite.x - 8),
+          ymin: Math.floor(this.sprite.y - 8),
+          xmax: Math.floor(this.sprite.x + 8),
+          ymax: Math.floor(this.sprite.y + 8)
+        });
+      }
+    });
 
     // TODO: Player stick to platform as it moves.
   }

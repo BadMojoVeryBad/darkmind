@@ -16,12 +16,8 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
   }
 
   update(time: number, delta: number, context: PlayerContext): NodeStateInterface<PlayerContext> {
-    // Don't collide with map while dashing.
-    context.mapCollider.active = false;
-
     // Transition to running state if dash ends.
     if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
-      context.mapCollider.active = true;
       const nextStateName = (context.isOverlappingMap) ? 'dead' : 'running';
 
       if (nextStateName === 'dead') {

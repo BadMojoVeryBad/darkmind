@@ -17,15 +17,17 @@ import { CONSTANTS } from './constants';
 import { CharacterLight } from './nodes/characterLight';
 import { LightParticles } from './nodes/lightParticles';
 import { DeadState } from './states/playerStates/deadState';
-import { Platform } from './nodes/platform';
+import { PlatformNode } from './nodes/platformNode';
 import { TilemapStrategyInterface } from './services/tilemapServiceInterface';
 import { TilemapService } from './services/tilemapService';
+import { MapCollisionNode } from './nodes/mapCollisionNode';
+import { RectangleService } from './services/rectangleService';
+import { RectangleServiceInterface } from './services/rectangleServiceInterface';
 
 // Create a game.
 const game = Game.create(240, 135, {
   backgroundColor: 0x081820,
-  loadingColor: 0x346856,
-  // debug: true
+  loadingColor: 0x346856
 });
 
 // Register scenes.
@@ -36,9 +38,10 @@ game.registerNode('player', PlayerNode);
 game.registerNode('characterLight', CharacterLight);
 game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
+game.registerNode('mapCollision', MapCollisionNode);
 game.registerNode('islandParticles', IslandParticles);
 game.registerNode('lightParticles', LightParticles);
-game.registerNode('platform', Platform);
+game.registerNode('platform', PlatformNode);
 
 // Register assets.
 game.registerAsset('tiles', 'assets/tiles/main.png');
@@ -77,6 +80,7 @@ game.registerControl(CONSTANTS.CONTROL_DASH, 'Keyboard.32', 'Gamepad.A');
 game.registerService<Context>('context', Context, true);
 game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<TilemapStrategyInterface>('tilemapService', TilemapService);
+game.registerService<RectangleServiceInterface>('rectangleService', RectangleService);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);

@@ -7,4 +7,6 @@ export const CONSTANTS = {
   PLAYER_RESPAWN_TIME: 500,
 
   CONTROL_DASH: 'DASH',
+
+  TILE_SIZE: 16,
 };

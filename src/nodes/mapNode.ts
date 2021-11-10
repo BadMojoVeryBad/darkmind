@@ -1,4 +1,5 @@
 import { Node, injectable } from 'phaser-node-framework';
+import { Rectangle } from '../services/rectangleServiceInterface';
 
 /**
  * Creates a map from tiled data.
@@ -21,12 +22,11 @@ export class MapNode extends Node {
     // Create map.
     this.map = this.scene.make.tilemap({ key: this.name });
     const tiles = this.map.addTilesetImage('main', 'tiles', 16, 16, 8, 8);
-    this.map.createLayer('tiles', tiles).setDepth(10);
-    const collisionLayer = this.map.createLayer('collision', tiles).setDepth(10);
+    const collisionLayer = this.map.createLayer('tiles', tiles).setDepth(10);
+    // const collisionLayer = this.map.createLayer('collision', tiles).setDepth(10);
     const maskLayer = this.map.createLayer('mask', tiles).setDepth(10);
-    collisionLayer.setVisible(false);
     maskLayer.setVisible(false);
-    collisionLayer.setCollision([6]);
+    // collisionLayer.setCollision([2, 3, 13, 11, 1, 12, 22, 4, 5], true, false);
 
     // Create a mask that shows only 'land' tiles.
     this.mask = this.scene.add.renderTexture(0, 0, 400, 1600);
@@ -55,7 +55,21 @@ export class MapNode extends Node {
     //     collidingTileColor: new Phaser.Display.Color(255, 98, 0, 50),
     //     faceColor: new Phaser.Display.Color(255, 98, 0, 150)
     // };
-    // this.map.renderDebug(debugGraphics, style, 'collision');
+    // this.map.renderDebug(debugGraphics, style, 'tiles');
+
+    // Listen.
+    this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
+      collisionLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
+        if ([2, 3, 13, 11, 1, 12, 22, 4, 5].includes(tile.index)) {
+          rectangles.push({
+            xmin: (tile.x * 16),
+            ymin: (tile.y * 16),
+            xmax: (tile.x * 16) + 16,
+            ymax: (tile.y * 16) + 16
+          });
+        }
+      });
+    });
   }
 
   public created(): void {

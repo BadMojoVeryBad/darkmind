@@ -13,6 +13,7 @@ export class PlayerNode extends Node {
   private state: NodeStateInterface<PlayerContext>;
   private context: PlayerContext;
   private text: Phaser.GameObjects.Text;
+  private colliders: Phaser.Physics.Arcade.Collider[] = [];
 
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
@@ -78,7 +79,6 @@ export class PlayerNode extends Node {
       angle: 0,
       dashTime: 0,
       dashVector: new Phaser.Math.Vector2(0, 0),
-      mapCollider: null,
       states: [
         this.idleState,
         this.runningState,
@@ -88,14 +88,22 @@ export class PlayerNode extends Node {
     };
 
     // Set map collision stuff when the map gets created.
-    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
-      const collisionLayer = map.getLayer('collision').tilemapLayer;
-      this.context.mapCollider = this.scene.physics.add.collider(player, collisionLayer);
-      this.scene.physics.add.overlap(player, collisionLayer, (player, map) => {
-        // This property exists. You just have to trust me.
-        // @ts-ignore
-        this.context.isOverlappingMap = map.index >= 0;
-      });
+    this.scene.events.on('calculateMapCollision', (rectangles: Phaser.GameObjects.Rectangle[]) => {
+      this.context.isOverlappingMap = false;
+      for (const collider of this.colliders) {
+        collider.destroy();
+      }
+      this.colliders = [];
+
+      for (const rectangle of rectangles) {
+        if (this.state.getName() !== 'dashing') {
+          this.colliders.push(this.scene.physics.add.collider(player, rectangle));
+        }
+
+        this.colliders.push(this.scene.physics.add.overlap(player, rectangle, (player, map) => {
+          this.context.isOverlappingMap = true;
+        }));
+      }
     });
   }
 
@@ -107,6 +115,8 @@ export class PlayerNode extends Node {
   public update(time: number, delta: number): void {
     // Update player based on state.
     this.state = this.state.update(time, delta, this.context);
+
+    this.text.setText(delta.toFixed(2) + '\n' + this.colliders.length);
   }
 
   public destroy(): void {
