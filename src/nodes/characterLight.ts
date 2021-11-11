@@ -26,6 +26,7 @@ export class CharacterLight extends Node {
   }
 
   public destroy(): void {
+    // TODO: Destroy objects properly.
     this.scene.events.off('maskCreated', this.onMaskCreated, this);
     this.scene.events.off('postupdate', this.onPostUpdate, this);
   }

@@ -1,122 +1,228 @@
-import { Node, injectable, inject } from 'phaser-node-framework';
-import { CONSTANTS } from '../constants';
-import { Rectangle, RectangleServiceInterface } from '../services/rectangleServiceInterface';
+import { Node, injectable } from 'phaser-node-framework';
+
+export type Rectangle = {
+  xmin: number,
+  xmax: number,
+  ymin: number,
+  ymax: number
+};
+
+export type CollisionRectangle = {
+  xmin: number,
+  xmax: number,
+  ymin: number,
+  ymax: number,
+  direction: 'left'|'right'|'up'|'down'
+};
 
 /**
  * The collision for the level.
  */
 @injectable()
 export class MapCollisionNode extends Node {
-  private debugRectangles: Array<Phaser.GameObjects.Rectangle> = [];
   private collisionRectangles: Array<Phaser.GameObjects.Rectangle> = [];
-  private collisionRectangleColliders: Array<Phaser.Physics.Arcade.Collider> = [];
 
-  constructor(@inject('rectangleService') private rectangleService: RectangleServiceInterface) {
-    super();
-  }
-
-  public create(): void {
-
-  }
-
-  public created(): void {
-
-  }
-
-  public update(time: number): void {
-    // Delete last frame's collision.
-    for (const collisionRectangle of this.debugRectangles) {
-      collisionRectangle.destroy();
-    }
-    for (const collisionRectangle of this.collisionRectangles) {
-      collisionRectangle.destroy();
-    }
-    for (const collisionRectangleCollider of this.collisionRectangleColliders) {
-      collisionRectangleCollider.destroy();
-    }
+  public destroy(): void {
+    this.collisionRectangles.forEach(rectangle => rectangle.destroy());
     this.collisionRectangles = [];
-    this.collisionRectangleColliders = [];
-    this.debugRectangles = [];
+  }
+
+  public update(): void {
+    // Delete last frame's collision.
+    this.collisionRectangles.forEach(rectangle => rectangle.destroy());
+    this.collisionRectangles = [];
 
     // Create an array of rectangles and allow other
     // nodes to add to it by listening to and event.
     const rectangles: Array<Rectangle> = [];
     this.scene.events.emit('addRectanglesToMapCollision', rectangles);
 
-    // The bounds to do collision in.
-    const cameraBounds = {
-      xmin: Math.round(this.scene.cameras.main.scrollX),
-      xmax: Math.round(this.scene.cameras.main.scrollX + this.scene.width()),
-      ymin: Math.round(this.scene.cameras.main.scrollY),
-      ymax: Math.round(this.scene.cameras.main.scrollY + this.scene.height())
-    };
-
+    // This giant loop goes through all the rectangles that require collision
+    // around them. It checks if any are touching each other and creates edges
+    // accordingly. That is, if two rectangles are touching to form a larger
+    // shape, it will create collision around that larger shape.
+    //
+    // We also check to see which direction each edge should collide on. The
+    // collision directions face inwards to the rectangles. E.g. The left side
+    // of a rectangle will collide right.
+    const collisionRectangles: CollisionRectangle[] = [];
     for (const rectangle of rectangles) {
-      // this.scene.add.rectangle(negativeRectangle.xmin, negativeRectangle.ymin, negativeRectangle.xmax - negativeRectangle.xmin, negativeRectangle.ymax - negativeRectangle.ymin, 0xffffff, 0.25)
-    }
+      const collisionAll = {
+        up: false,
+        down: false,
+        left: false,
+        right: false
+      };
 
-    // Create map collision.
-    const negativeRectangles = this.rectangleService.getNegativeSpaceRectangles(cameraBounds, rectangles);
-    for (const negativeRectangle of negativeRectangles) {
-      const collisionRectangle = this.scene.add.rectangle(negativeRectangle.xmin, negativeRectangle.ymin, negativeRectangle.xmax - negativeRectangle.xmin, negativeRectangle.ymax - negativeRectangle.ymin, 0xffffff, 0.25)
-        .setStrokeStyle(1, 0x0000ff)
-        .setDepth(1000)
-        .setOrigin(0, 0);
-        // .setVisible(false);
-      this.scene.physics.add.existing(collisionRectangle);
+      for (const comparisonRectangle of rectangles) {
+        const collision = {
+          up: false,
+          down: false,
+          left: false,
+          right: false
+        };
 
-      collisionRectangle.body.checkCollision.right = false;
-      collisionRectangle.body.checkCollision.up = false;
-      collisionRectangle.body.checkCollision.down = false;
-      collisionRectangle.body.checkCollision.left = false;
+        // Do simple checks first for efficiency.
+        collision.left = ((rectangle.xmin === comparisonRectangle.xmax) && (comparisonRectangle.ymax > rectangle.ymin && comparisonRectangle.ymin < rectangle.ymax));
+        collision.right = ((rectangle.xmax === comparisonRectangle.xmin) && (comparisonRectangle.ymax > rectangle.ymin && comparisonRectangle.ymin < rectangle.ymax));
+        collision.down = ((rectangle.ymax === comparisonRectangle.ymin) && (comparisonRectangle.xmax > rectangle.xmin && comparisonRectangle.xmin < rectangle.xmax));
+        collision.up = ((rectangle.ymin === comparisonRectangle.ymax) && (comparisonRectangle.xmax > rectangle.xmin && comparisonRectangle.xmin < rectangle.xmax));
 
-      for (const rectangle of rectangles) {
-        // Collide right.
-        if ((rectangle.xmin === negativeRectangle.xmax) &&
-          (negativeRectangle.ymax > rectangle.ymin && negativeRectangle.ymin < rectangle.ymax)) {
-          collisionRectangle.body.checkCollision.right = true;
-          this.debugRectangles.push(this.scene.add.rectangle(negativeRectangle.xmax, negativeRectangle.ymin, 2, negativeRectangle.ymax - negativeRectangle.ymin, 0x00ff00, 1).setDepth(1001).setOrigin(0, 0));
+        // Add to all collisions.
+        collisionAll.left = collisionAll.left || collision.left;
+        collisionAll.right = collisionAll.right || collision.right;
+        collisionAll.up = collisionAll.up || collision.up;
+        collisionAll.down = collisionAll.down || collision.down;
+
+        // If there is a collision. create collision rectangles for partial edges.
+        if (collision.left) {
+          if (comparisonRectangle.ymax - rectangle.ymax > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmin - 2,
+              xmax: rectangle.xmin,
+              ymin: rectangle.ymin,
+              ymax: comparisonRectangle.ymin,
+              direction: 'right'
+            });
+          }
+
+          if (rectangle.ymin - comparisonRectangle.ymin > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmin - 2,
+              xmax: rectangle.xmin,
+              ymin: comparisonRectangle.ymax,
+              ymax: rectangle.ymax,
+              direction: 'right'
+            });
+          }
         }
 
-        // Collide left.
-        if ((rectangle.xmax === negativeRectangle.xmin) &&
-          (negativeRectangle.ymax > rectangle.ymin && negativeRectangle.ymin < rectangle.ymax)) {
-          collisionRectangle.body.checkCollision.left = true;
-          this.debugRectangles.push(this.scene.add.rectangle(negativeRectangle.xmin, negativeRectangle.ymin, 2, negativeRectangle.ymax - negativeRectangle.ymin, 0x00ff00, 1).setDepth(1001).setOrigin(0, 0));
+        if (collision.right) {
+          if (comparisonRectangle.ymax - rectangle.ymax > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmax,
+              xmax: rectangle.xmax + 2,
+              ymin: rectangle.ymin,
+              ymax: comparisonRectangle.ymin,
+              direction: 'left'
+            });
+          }
+
+          if (rectangle.ymin - comparisonRectangle.ymin > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmax,
+              xmax: rectangle.xmax + 2,
+              ymin: comparisonRectangle.ymax,
+              ymax: rectangle.ymax,
+              direction: 'left'
+            });
+          }
         }
 
-        // Collide up.
-        if ((rectangle.ymax === negativeRectangle.ymin) &&
-          (negativeRectangle.xmax > rectangle.xmin && negativeRectangle.xmin < rectangle.xmax)) {
-          collisionRectangle.body.checkCollision.up = true;
-          this.debugRectangles.push(this.scene.add.rectangle(negativeRectangle.xmin, negativeRectangle.ymin, negativeRectangle.xmax - negativeRectangle.xmin, 2, 0x00ff00, 1).setDepth(1001).setOrigin(0, 0));
+        if (collision.up) {
+          if (rectangle.xmin - comparisonRectangle.xmin > 0) {
+            collisionRectangles.push({
+              xmin: comparisonRectangle.xmax,
+              xmax: rectangle.xmax,
+              ymin: rectangle.ymin - 2,
+              ymax: rectangle.ymin,
+              direction: 'down'
+            });
+          }
+
+          if (comparisonRectangle.xmin - rectangle.xmin > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmin,
+              xmax: comparisonRectangle.xmin,
+              ymin: rectangle.ymin - 2,
+              ymax: rectangle.ymin,
+              direction: 'down'
+            });
+          }
         }
 
-        // Collide down.
-        if ((rectangle.ymin === negativeRectangle.ymax) &&
-          (negativeRectangle.xmax > rectangle.xmin && negativeRectangle.xmin < rectangle.xmax)) {
-          collisionRectangle.body.checkCollision.down = true;
-          this.debugRectangles.push(this.scene.add.rectangle(negativeRectangle.xmin, negativeRectangle.ymax, negativeRectangle.xmax - negativeRectangle.xmin, 2, 0x00ff00, 1).setDepth(1001).setOrigin(0, 0));
+        if (collision.down) {
+          if (rectangle.xmin - comparisonRectangle.xmin > 0) {
+            collisionRectangles.push({
+              xmin: comparisonRectangle.xmax,
+              xmax: rectangle.xmax,
+              ymin: rectangle.ymax,
+              ymax: rectangle.ymax + 2,
+              direction: 'up'
+            });
+          }
+
+          if (comparisonRectangle.xmin - rectangle.xmin > 0) {
+            collisionRectangles.push({
+              xmin: rectangle.xmin,
+              xmax: comparisonRectangle.xmin,
+              ymin: rectangle.ymax,
+              ymax: rectangle.ymax + 2,
+              direction: 'up'
+            });
+          }
         }
       }
 
-      this.collisionRectangles.push(collisionRectangle);
-      // const collisionRectangleCollider = this.scene.physics.add.collider(this.player, collisionRectangle);
-      // this.collisionRectangleColliders.push(collisionRectangleCollider);
+      // If there's no collisions at all, create a collision rectangle for the full edge.
+      if (!collisionAll.left) {
+        collisionRectangles.push({
+          xmin: rectangle.xmin - 2,
+          xmax: rectangle.xmin,
+          ymin: rectangle.ymin,
+          ymax: rectangle.ymax,
+          direction: 'right'
+        });
+      }
+
+      if (!collisionAll.right) {
+        collisionRectangles.push({
+          xmin: rectangle.xmax,
+          xmax: rectangle.xmax + 2,
+          ymin: rectangle.ymin,
+          ymax: rectangle.ymax,
+          direction: 'left'
+        });
+      }
+
+      if (!collisionAll.up) {
+        collisionRectangles.push({
+          xmin: rectangle.xmin,
+          xmax: rectangle.xmax,
+          ymin: rectangle.ymin - 2,
+          ymax: rectangle.ymin,
+          direction: 'down'
+        });
+      }
+
+      if (!collisionAll.down) {
+        collisionRectangles.push({
+          xmin: rectangle.xmin,
+          xmax: rectangle.xmax,
+          ymin: rectangle.ymax,
+          ymax: rectangle.ymax + 2,
+          direction: 'up'
+        });
+      }
+    }
+
+    // Now we create a physics object for each one. Phaser's typings aren't
+    // great with physics bodies, so we ts-ignore some stuff in here.
+    for (const collisionRectangle of collisionRectangles) {
+      let collisionRectangleSprite = this.scene.add.rectangle(collisionRectangle.xmin, collisionRectangle.ymin, collisionRectangle.xmax - collisionRectangle.xmin, collisionRectangle.ymax - collisionRectangle.ymin, 0x00ff00, 1).setDepth(1001).setOrigin(0, 0).setVisible(false);
+      collisionRectangleSprite = this.scene.physics.add.existing(collisionRectangleSprite, true);
+      // @ts-ignore
+      collisionRectangleSprite.body.checkCollision.down = collisionRectangle.direction === 'down';
+      // @ts-ignore
+      collisionRectangleSprite.body.checkCollision.up = collisionRectangle.direction === 'up';
+      // @ts-ignore
+      collisionRectangleSprite.body.checkCollision.left = collisionRectangle.direction === 'left';
+      // @ts-ignore
+      collisionRectangleSprite.body.checkCollision.right = collisionRectangle.direction === 'right';
+      this.collisionRectangles.push(collisionRectangleSprite);
     }
 
     // Emit the collison rectanges so stuff can collide with them.
     this.scene.events.emit('calculateMapCollision', this.collisionRectangles);
-  }
-
-  public destroy(): void {
-    for (const collisionRectangle of this.collisionRectangles) {
-      collisionRectangle.destroy();
-    }
-    this.collisionRectangles = [];
-    for (const collisionRectangleCollider of this.collisionRectangleColliders) {
-      collisionRectangleCollider.destroy();
-    }
-    this.collisionRectangleColliders = [];
   }
 }

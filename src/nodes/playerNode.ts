@@ -64,6 +64,7 @@ export class PlayerNode extends Node {
       lifespan: 500,
     });
 
+    // Debug text.
     this.text = this.scene.add.text(10, 10, 'debug');
     this.text.setScrollFactor(0);
     this.text.setDepth(1000);
@@ -89,20 +90,13 @@ export class PlayerNode extends Node {
 
     // Set map collision stuff when the map gets created.
     this.scene.events.on('calculateMapCollision', (rectangles: Phaser.GameObjects.Rectangle[]) => {
-      this.context.isOverlappingMap = false;
-      for (const collider of this.colliders) {
-        collider.destroy();
-      }
+      this.colliders.forEach(collider => collider.destroy());
       this.colliders = [];
 
       for (const rectangle of rectangles) {
         if (this.state.getName() !== 'dashing') {
           this.colliders.push(this.scene.physics.add.collider(player, rectangle));
         }
-
-        // this.colliders.push(this.scene.physics.add.overlap(player, rectangle, (player, map) => {
-        //   this.context.isOverlappingMap = true;
-        // }));
       }
     });
   }
@@ -116,10 +110,12 @@ export class PlayerNode extends Node {
     // Update player based on state.
     this.state = this.state.update(time, delta, this.context);
 
+    // Debug text.
     this.text.setText(delta.toFixed(2) + '\n' + this.colliders.length);
   }
 
   public destroy(): void {
+    // TODO: Destroy the player properly.
     this.player.destroy();
   }
 }

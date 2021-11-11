@@ -5,10 +5,6 @@ import { Node, injectable } from 'phaser-node-framework';
  */
 @injectable()
 export class CameraNode extends Node {
-  constructor() {
-    super();
-  }
-
   public create(): void {
     // Listen to events.
     this.scene.events.on('playerCreated', this.onPlayerCreated, this);

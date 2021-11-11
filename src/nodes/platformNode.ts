@@ -1,6 +1,6 @@
 import { Node, injectable, inject } from 'phaser-node-framework';
-import { Rectangle } from '../services/rectangleServiceInterface';
 import { TilemapStrategyInterface } from '../services/tilemapServiceInterface';
+import { Rectangle } from './mapCollisionNode';
 
 /**
  * The platforms the player jumps to.
@@ -65,7 +65,7 @@ export class PlatformNode extends Node {
 
     // TODO: Add to light mask.
 
-    // TODO: Collision.
+    // Collision.
     this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
       if (!this.isTransparent) {
         rectangles.push({

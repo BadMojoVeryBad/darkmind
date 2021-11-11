@@ -21,13 +21,12 @@ import { PlatformNode } from './nodes/platformNode';
 import { TilemapStrategyInterface } from './services/tilemapServiceInterface';
 import { TilemapService } from './services/tilemapService';
 import { MapCollisionNode } from './nodes/mapCollisionNode';
-import { RectangleService } from './services/rectangleService';
-import { RectangleServiceInterface } from './services/rectangleServiceInterface';
 
 // Create a game.
-const game = Game.create(240, 135, {
-  backgroundColor: 0x081820,
-  loadingColor: 0x346856
+const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
+  backgroundColor: CONSTANTS.COLOR_DARKEST_HEX,
+  loadingColor: CONSTANTS.COLOR_DARK_HEX,
+  // debug: true
 });
 
 // Register scenes.
@@ -80,38 +79,10 @@ game.registerControl(CONSTANTS.CONTROL_DASH, 'Keyboard.32', 'Gamepad.A');
 game.registerService<Context>('context', Context, true);
 game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<TilemapStrategyInterface>('tilemapService', TilemapService);
-game.registerService<RectangleServiceInterface>('rectangleService', RectangleService);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadState);
-
-const rectangeService = new RectangleService();
-
-const rectangles = rectangeService.getNegativeSpaceRectangles(
-  {
-    xmin: 0,
-    xmax: 10,
-    ymin: 0,
-    ymax: 10
-  },
-  [
-    {
-      xmin: 2,
-      xmax: 4,
-      ymin: 2,
-      ymax: 4
-    },
-    {
-      xmin: 3,
-      xmax: 5,
-      ymin: 3,
-      ymax: 5
-    }
-  ]
-);
-
-console.log(rectangles);
 
 // Start game.
 game.start();

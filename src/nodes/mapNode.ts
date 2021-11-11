@@ -1,5 +1,5 @@
 import { Node, injectable } from 'phaser-node-framework';
-import { Rectangle } from '../services/rectangleServiceInterface';
+import { Rectangle } from './mapCollisionNode';
 
 /**
  * Creates a map from tiled data.
@@ -97,6 +97,7 @@ export class MapNode extends Node {
   }
 
   public destroy(): void {
+    // TODO: Destroy map objects properly.
     this.map.destroy();
   }
 }
