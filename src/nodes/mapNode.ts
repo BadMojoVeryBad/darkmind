@@ -23,10 +23,8 @@ export class MapNode extends Node {
     this.map = this.scene.make.tilemap({ key: this.name });
     const tiles = this.map.addTilesetImage('main', 'tiles', 16, 16, 8, 8);
     const collisionLayer = this.map.createLayer('tiles', tiles).setDepth(10);
-    // const collisionLayer = this.map.createLayer('collision', tiles).setDepth(10);
     const maskLayer = this.map.createLayer('mask', tiles).setDepth(10);
     maskLayer.setVisible(false);
-    // collisionLayer.setCollision([2, 3, 13, 11, 1, 12, 22, 4, 5], true, false);
 
     // Create a mask that shows only 'land' tiles.
     this.mask = this.scene.add.renderTexture(0, 0, 400, 1600);
@@ -45,17 +43,6 @@ export class MapNode extends Node {
         }));
       }
     });
-
-    // Debug graphics.
-    // const debugGraphics = this.scene.add.graphics();
-    // debugGraphics.setScale(1);
-    // debugGraphics.setDepth(1000);
-    // const style: Phaser.Types.Tilemaps.StyleConfig = {
-    //     tileColor: null,
-    //     collidingTileColor: new Phaser.Display.Color(255, 98, 0, 50),
-    //     faceColor: new Phaser.Display.Color(255, 98, 0, 150)
-    // };
-    // this.map.renderDebug(debugGraphics, style, 'tiles');
 
     // Listen.
     this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
