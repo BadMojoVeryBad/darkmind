@@ -11,12 +11,13 @@ export type Rectangle = {
  * The mask for the level.
  */
 @injectable()
-export class MapCollisionNode extends Node {
+export class MapMaskNode extends Node {
   private maskRectangles: Phaser.GameObjects.Rectangle[] = [];
   private mask: Phaser.GameObjects.RenderTexture;
+  private bitmapMask: Phaser.Display.Masks.BitmapMask;
 
   public destroy(): void {
-    // TODO: Destroy objects an listeners.
+    // TODO: Destroy objects and listeners.
   }
 
   public create(): void {
@@ -26,7 +27,8 @@ export class MapCollisionNode extends Node {
     this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
       this.mask = this.scene.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels);
       this.mask.setVisible(false);
-      this.scene.events.emit('maskRenderTextureCreated');
+      this.mask.setDepth(1001);
+      this.scene.events.emit('maskRenderTextureCreated', this.mask.createBitmapMask());
     });
   }
 
@@ -53,5 +55,8 @@ export class MapCollisionNode extends Node {
       this.mask.draw(maskRectangle);
       this.maskRectangles.push(maskRectangle);
     }
+
+    // Emit an event to allow other nodes to draw whatever they want to the mask.
+    this.scene.events.emit('drawMaskRenderTexture', this.mask);
   }
 }

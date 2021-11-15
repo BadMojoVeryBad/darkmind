@@ -8,12 +8,7 @@ import { Rectangle } from './mapCollisionNode';
 export class MapNode extends Node {
   private name = '';
   private map: Phaser.Tilemaps.Tilemap;
-  private mask: Phaser.GameObjects.RenderTexture;
-
-  constructor() {
-    super();
-  }
-
+  private maskImages: Phaser.GameObjects.Image[] = [];
   public init(data: Record<string, string>): void {
     this.name = data.name;
   }
@@ -26,15 +21,13 @@ export class MapNode extends Node {
     const maskLayer = this.map.createLayer('mask', tiles).setDepth(10);
     maskLayer.setVisible(false);
 
-    // Create a mask that shows only 'land' tiles.
-    this.mask = this.scene.add.renderTexture(0, 0, 400, 1600);
-    this.mask.setVisible(false);
+    // Create images for each of the mask tiles.
     maskLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
       if (tile.index >= 0) {
         const image = tiles.image;
         const coordinates = tiles.getTileTextureCoordinates(tile.index) as ({ x: number, y: number } | null);
         image.add('mask' + tile.index, 0, coordinates.x, coordinates.y, 16, 16);
-        this.mask.draw(this.scene.make.image({
+        this.maskImages.push(this.scene.make.image({
           x: (tile.x * 16) + 8,
           y: (tile.y * 16) + 8,
           key: image,
@@ -45,6 +38,12 @@ export class MapNode extends Node {
     });
 
     // Listen.
+    this.scene.events.on('drawMaskRenderTexture', (mask: Phaser.GameObjects.RenderTexture) => {
+      for (const image of this.maskImages) {
+        mask.draw(image);
+      }
+    });
+
     this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
       collisionLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
         if ([2, 3, 13, 11, 1, 12, 22, 4, 5].includes(tile.index)) {
@@ -60,12 +59,6 @@ export class MapNode extends Node {
   }
 
   public created(): void {
-    // Emit the mask so that others can add to it.
-    this.scene.events.emit('maskRenderTextureCreated', this.mask);
-
-    // Create a mask with the render texture and emit it.
-    this.scene.events.emit('maskCreated', this.mask.createBitmapMask());
-
     // Emit the map so other nodes can use it.
     this.scene.events.emit('mapCreated', this.map);
 

@@ -21,6 +21,7 @@ import { PlatformNode } from './nodes/platformNode';
 import { TilemapStrategyInterface } from './services/tilemapServiceInterface';
 import { TilemapService } from './services/tilemapService';
 import { MapCollisionNode } from './nodes/mapCollisionNode';
+import { MapMaskNode } from './nodes/mapMaskNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -38,6 +39,7 @@ game.registerNode('characterLight', CharacterLight);
 game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
 game.registerNode('mapCollision', MapCollisionNode);
+game.registerNode('mapMask', MapMaskNode);
 game.registerNode('islandParticles', IslandParticles);
 game.registerNode('lightParticles', LightParticles);
 game.registerNode('platform', PlatformNode);
@@ -67,6 +69,8 @@ game.registerAnimation('textures', 'groundLight', 1, 12, true, 12);
 game.registerAnimation('textures', 'puffA', 1, 7, false, 24);
 game.registerAnimation('textures', 'platformIdle', 1, 8, true, 12);
 game.registerAnimation('textures', 'platformWiggling', 1, 2, true, 12);
+game.registerAnimation('textures', 'platformIdleMask', 1, 8, true, 12);
+game.registerAnimation('textures', 'platformWigglingMask', 1, 2, true, 12);
 
 // Register controls.
 game.registerControl('UP', 'Keyboard.38', 'Gamepad.UP', 'Gamepad.STICK_LEFT_UP');

@@ -21,7 +21,7 @@ export class CharacterLight extends Node {
     this.groundLight.anims.play('groundLight');
     this.groundLight.setDepth(30);
 
-    this.scene.events.on('maskCreated', this.onMaskCreated, this);
+    this.scene.events.on('maskRenderTextureCreated', this.onMaskCreated, this);
     this.scene.events.on('postupdate', this.onPostUpdate, this);
   }
 

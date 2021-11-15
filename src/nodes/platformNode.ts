@@ -10,6 +10,7 @@ export class PlatformNode extends Node {
   private particles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private sprite: Phaser.Physics.Arcade.Sprite;
+  private maskSprite: Phaser.GameObjects.Sprite;
   private x: number;
   private y: number;
   private moveTime = 0;
@@ -39,6 +40,8 @@ export class PlatformNode extends Node {
     this.sprite.anims.play('platformIdle');
     this.sprite.setDepth(10);
     this.sprite.body.setSize(20, 20);
+    this.maskSprite = this.scene.add.sprite(this.x, this.y, 'textures', 'platformIdle1');
+    this.maskSprite.anims.play('platformIdleMask');
 
     const multiplier = (16 * 16) / 128;
     this.particles = this.scene.add.particles('textures', 'darkPixel');
@@ -63,7 +66,12 @@ export class PlatformNode extends Node {
     this.emitter.start();
     this.particles.setDepth(5);
 
-    // TODO: Add to light mask.
+    // Light mask.
+    this.scene.events.on('drawMaskRenderTexture', (mask: Phaser.GameObjects.RenderTexture) => {
+      if (!this.isTransparent) {
+        mask.draw(this.maskSprite);
+      }
+    });
 
     // Collision.
     this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
@@ -84,15 +92,17 @@ export class PlatformNode extends Node {
     if (this.moveTime && !this.isTweening) {
       if (time > this.lastMovedTime + this.moveTime - 500) {
         this.sprite.anims.play('platformWiggling', true);
+        this.maskSprite.anims.play('platformWigglingMask', true);
       }
 
       if (time > this.lastMovedTime + this.moveTime) {
         this.lastMovedTime = time;
         this.sprite.anims.play('platformIdle', true);
+        this.maskSprite.anims.play('platformIdleMask', true);
         this.isTweening = true;
         if (this.x === this.sprite.x && this.y === this.sprite.y) {
           const tween = this.scene.tweens.add({
-            targets: [ this.sprite ],
+            targets: [ this.sprite, this.maskSprite ],
             duration: 50,
             x: this.moveX,
             y: this.moveY,
@@ -103,7 +113,7 @@ export class PlatformNode extends Node {
           });
         } else {
           const tween = this.scene.tweens.add({
-            targets: [ this.sprite ],
+            targets: [ this.sprite, this.maskSprite ],
             duration: 50,
             x: this.x,
             y: this.y,
@@ -119,15 +129,18 @@ export class PlatformNode extends Node {
     if (this.disappearTime) {
       if (time > this.lastdisappearedTime + this.disappearTime - 500 && !this.isTransparent) {
         this.sprite.anims.play('platformWiggling', true);
+        this.maskSprite.anims.play('platformWigglingMask', true);
       }
 
       if (time > this.lastdisappearedTime + this.disappearTime) {
         this.lastdisappearedTime = time;
         if (this.isTransparent) {
           this.sprite.anims.play('platformIdle', true);
+          this.maskSprite.anims.play('platformIdleMask', true);
         } else {
           this.sprite.anims.stop();
           this.sprite.setTexture('textures', 'platformTransparent');
+          this.maskSprite.anims.stop();
         }
 
         this.isTransparent = !this.isTransparent;
