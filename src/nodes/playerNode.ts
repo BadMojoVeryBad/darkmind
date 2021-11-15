@@ -104,6 +104,7 @@ export class PlayerNode extends Node {
   public created(): void {
     // Emit events for other nodes.
     this.scene.events.emit('playerCreated', this.context.player);
+    this.scene.events.emit('stickToPlatform', this.context.player);
   }
 
   public update(time: number, delta: number): void {

@@ -11,6 +11,7 @@ export class PlatformNode extends Node {
   private emitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private sprite: Phaser.Physics.Arcade.Sprite;
   private maskSprite: Phaser.GameObjects.Sprite;
+  private stickToPlatform: Phaser.Physics.Arcade.Sprite[] = [];
   private x: number;
   private y: number;
   private moveTime = 0;
@@ -21,6 +22,7 @@ export class PlatformNode extends Node {
   private lastdisappearedTime = 0;
   private isTweening = false;
   private isTransparent = false;
+  private prevPosition = new Phaser.Math.Vector2();
 
   constructor(@inject('tilemapService') private tilemapService: TilemapStrategyInterface) {
     super();
@@ -37,6 +39,7 @@ export class PlatformNode extends Node {
 
   public create(): void {
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, 'textures', 'platformIdle1');
+    this.sprite.body.immovable = true;
     this.sprite.anims.play('platformIdle');
     this.sprite.setDepth(10);
     this.sprite.body.setSize(20, 20);
@@ -85,7 +88,30 @@ export class PlatformNode extends Node {
       }
     });
 
-    // TODO: Player stick to platform as it moves.
+    // Player stick to platform as it moves.
+    this.scene.events.on('stickToPlatform', (gameObject: Phaser.Physics.Arcade.Sprite) => {
+      this.stickToPlatform.push(gameObject);
+    });
+
+    this.scene.events.on('preupdate', () => {
+      // Move objects that are standing on this platform.
+      if (!this.isTransparent) {
+        for (const gameObject of this.stickToPlatform) {
+          console.log(this.sprite.x - this.prevPosition.x);
+          if (this.scene.physics.overlap(gameObject, this.sprite)) {
+            gameObject.y += this.sprite.y - this.prevPosition.y;
+            gameObject.x += this.sprite.x - this.prevPosition.x;
+
+            // TODO: A way to detect when the player enters and leaves a platform.
+            // TODO: Make sure that when a platform moves, a player is either on or off the platform.
+            // gameObject.y += this.sprite.body.velocity.y;
+            // gameObject.x += this.sprite.body.velocity.x;
+          }
+        }
+      }
+      this.prevPosition.x = this.sprite.x;
+      this.prevPosition.y = this.sprite.y;
+    });
   }
 
   public update(time: number): void {
@@ -151,6 +177,7 @@ export class PlatformNode extends Node {
   }
 
   public destroy(): void {
+    // TODO: Destroy objects and listeners.
     this.sprite.destroy();
     this.particles.destroy();
   }
