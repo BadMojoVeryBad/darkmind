@@ -32,7 +32,7 @@ export class PlayerNode extends Node {
 
   public create(): void {
     // Create player.
-    const player = this.scene.physics.add.sprite(160, 1440, 'textures', 'playerIdleSide1').setScale(1).setDepth(20);
+    const player = this.scene.physics.add.sprite(56, 1431, 'textures', 'playerIdleSide1').setScale(1).setDepth(20);
     player.setSize(4, 4);
     player.setOffset(14, 25);
     player.setDepth(50);

@@ -45,13 +45,22 @@ export class MapCollisionNode extends Node {
     // We also check to see which direction each edge should collide on. The
     // collision directions face inwards to the rectangles. E.g. The left side
     // of a rectangle will collide right.
-    const collisionRectangles: CollisionRectangle[] = [];
+    let collisionRectangles: CollisionRectangle[] = [];
     for (const rectangle of rectangles) {
+      let tempCollisionRectangles: CollisionRectangle[] = [];
+
       const collisionAll = {
         up: false,
         down: false,
         left: false,
         right: false
+      };
+
+      const coveredLength = {
+        up: 0,
+        down: 0,
+        left: 0,
+        right: 0
       };
 
       for (const comparisonRectangle of rectangles) {
@@ -77,7 +86,8 @@ export class MapCollisionNode extends Node {
         // If there is a collision. create collision rectangles for partial edges.
         if (collision.left) {
           if (comparisonRectangle.ymax - rectangle.ymax > 0) {
-            collisionRectangles.push({
+            coveredLength.right += comparisonRectangle.ymax - rectangle.ymax;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmin - 2,
               xmax: rectangle.xmin,
               ymin: rectangle.ymin,
@@ -87,7 +97,8 @@ export class MapCollisionNode extends Node {
           }
 
           if (rectangle.ymin - comparisonRectangle.ymin > 0) {
-            collisionRectangles.push({
+            coveredLength.right += rectangle.ymin - comparisonRectangle.ymin;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmin - 2,
               xmax: rectangle.xmin,
               ymin: comparisonRectangle.ymax,
@@ -99,7 +110,8 @@ export class MapCollisionNode extends Node {
 
         if (collision.right) {
           if (comparisonRectangle.ymax - rectangle.ymax > 0) {
-            collisionRectangles.push({
+            coveredLength.left += comparisonRectangle.ymax - rectangle.ymax;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmax,
               xmax: rectangle.xmax + 2,
               ymin: rectangle.ymin,
@@ -109,7 +121,8 @@ export class MapCollisionNode extends Node {
           }
 
           if (rectangle.ymin - comparisonRectangle.ymin > 0) {
-            collisionRectangles.push({
+            coveredLength.left += rectangle.ymin - comparisonRectangle.ymin;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmax,
               xmax: rectangle.xmax + 2,
               ymin: comparisonRectangle.ymax,
@@ -121,7 +134,8 @@ export class MapCollisionNode extends Node {
 
         if (collision.up) {
           if (rectangle.xmin - comparisonRectangle.xmin > 0) {
-            collisionRectangles.push({
+            coveredLength.down += rectangle.xmin - comparisonRectangle.xmin;
+            tempCollisionRectangles.push({
               xmin: comparisonRectangle.xmax,
               xmax: rectangle.xmax,
               ymin: rectangle.ymin - 2,
@@ -131,7 +145,8 @@ export class MapCollisionNode extends Node {
           }
 
           if (comparisonRectangle.xmin - rectangle.xmin > 0) {
-            collisionRectangles.push({
+            coveredLength.down += comparisonRectangle.xmin - rectangle.xmin;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmin,
               xmax: comparisonRectangle.xmin,
               ymin: rectangle.ymin - 2,
@@ -143,7 +158,8 @@ export class MapCollisionNode extends Node {
 
         if (collision.down) {
           if (rectangle.xmin - comparisonRectangle.xmin > 0) {
-            collisionRectangles.push({
+            coveredLength.up += rectangle.xmin - comparisonRectangle.xmin;
+            tempCollisionRectangles.push({
               xmin: comparisonRectangle.xmax,
               xmax: rectangle.xmax,
               ymin: rectangle.ymax,
@@ -153,7 +169,8 @@ export class MapCollisionNode extends Node {
           }
 
           if (comparisonRectangle.xmin - rectangle.xmin > 0) {
-            collisionRectangles.push({
+            coveredLength.up += comparisonRectangle.xmin - rectangle.xmin;
+            tempCollisionRectangles.push({
               xmin: rectangle.xmin,
               xmax: comparisonRectangle.xmin,
               ymin: rectangle.ymax,
@@ -164,9 +181,27 @@ export class MapCollisionNode extends Node {
         }
       }
 
+      // If the partial collisions add up to a full collision, remove all the collision
+      // rectangle for that side.
+      if (coveredLength.down === rectangle.ymax - rectangle.ymin) {
+        tempCollisionRectangles = tempCollisionRectangles.filter(rec => rec.direction !== 'down');
+      }
+
+      if (coveredLength.up === rectangle.ymax - rectangle.ymin) {
+        tempCollisionRectangles = tempCollisionRectangles.filter(rec => rec.direction !== 'up');
+      }
+
+      if (coveredLength.left === rectangle.xmax - rectangle.xmin) {
+        tempCollisionRectangles = tempCollisionRectangles.filter(rec => rec.direction !== 'left');
+      }
+
+      if (coveredLength.right === rectangle.xmax - rectangle.xmin) {
+        tempCollisionRectangles = tempCollisionRectangles.filter(rec => rec.direction !== 'right');
+      }
+
       // If there's no collisions at all, create a collision rectangle for the full edge.
       if (!collisionAll.left) {
-        collisionRectangles.push({
+        tempCollisionRectangles.push({
           xmin: rectangle.xmin - 2,
           xmax: rectangle.xmin,
           ymin: rectangle.ymin,
@@ -176,7 +211,7 @@ export class MapCollisionNode extends Node {
       }
 
       if (!collisionAll.right) {
-        collisionRectangles.push({
+        tempCollisionRectangles.push({
           xmin: rectangle.xmax,
           xmax: rectangle.xmax + 2,
           ymin: rectangle.ymin,
@@ -186,7 +221,7 @@ export class MapCollisionNode extends Node {
       }
 
       if (!collisionAll.up) {
-        collisionRectangles.push({
+        tempCollisionRectangles.push({
           xmin: rectangle.xmin,
           xmax: rectangle.xmax,
           ymin: rectangle.ymin - 2,
@@ -196,7 +231,7 @@ export class MapCollisionNode extends Node {
       }
 
       if (!collisionAll.down) {
-        collisionRectangles.push({
+        tempCollisionRectangles.push({
           xmin: rectangle.xmin,
           xmax: rectangle.xmax,
           ymin: rectangle.ymax,
@@ -204,6 +239,8 @@ export class MapCollisionNode extends Node {
           direction: 'up'
         });
       }
+
+      collisionRectangles = collisionRectangles.concat(tempCollisionRectangles);
     }
 
     // Now we create a physics object for each one. Phaser's typings aren't

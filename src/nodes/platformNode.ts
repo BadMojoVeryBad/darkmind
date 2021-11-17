@@ -117,7 +117,7 @@ export class PlatformNode extends Node {
         if (this.x === this.sprite.x && this.y === this.sprite.y) {
           const tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
-            duration: 2000,
+            duration: 500,
             x: this.moveX,
             y: this.moveY,
             onComplete: () => {
@@ -128,7 +128,7 @@ export class PlatformNode extends Node {
         } else {
           const tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
-            duration: 2000,
+            duration: 500,
             x: this.x,
             y: this.y,
             onComplete: () => {
