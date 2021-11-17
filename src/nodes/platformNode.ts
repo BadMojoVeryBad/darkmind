@@ -36,6 +36,8 @@ export class PlatformNode extends Node {
   public init(data: Record<string, unknown>): void {
     this.x = data.x as number + 8;
     this.y = data.y as number - 8;
+    this.lastdisappearedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
+    this.lastMovedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.disappearTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'disappearTime', 0);
     this.moveTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'moveTime', 0);
     this.moveX = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'moveX', 0) + 8;
