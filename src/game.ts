@@ -27,7 +27,7 @@ import { MapMaskNode } from './nodes/mapMaskNode';
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
   backgroundColor: CONSTANTS.COLOR_DARKEST_HEX,
   loadingColor: CONSTANTS.COLOR_DARK_HEX,
-  // debug: true
+  debug: true
 });
 
 // Register scenes.
