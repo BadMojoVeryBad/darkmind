@@ -112,7 +112,7 @@ export class PlatformNode extends Node {
       }
 
       if (time > this.lastMovedTime + this.moveTime) {
-        this.lastMovedTime = time;
+        this.lastMovedTime = this.lastMovedTime + this.moveTime;
         this.sprite.anims.play('platformIdle', true);
         this.maskSprite.anims.play('platformIdleMask', true);
         this.isTweening = true;
@@ -149,7 +149,7 @@ export class PlatformNode extends Node {
       }
 
       if (time > this.lastdisappearedTime + this.disappearTime) {
-        this.lastdisappearedTime = time;
+        this.lastdisappearedTime = this.lastdisappearedTime + this.disappearTime;
         if (this.isTransparent) {
           this.sprite.anims.play('platformIdle', true);
           this.maskSprite.anims.play('platformIdleMask', true);
