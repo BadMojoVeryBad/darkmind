@@ -112,7 +112,7 @@ export class PlayerNode extends Node {
     this.state = this.state.update(time, delta, this.context);
 
     // Debug text.
-    this.text.setText(delta.toFixed(2) + '\n' + this.colliders.length);
+    this.text.setText('Delta: ' + delta.toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString());
   }
 
   public destroy(): void {

@@ -9,6 +9,8 @@ export class MapNode extends Node {
   private name = '';
   private map: Phaser.Tilemaps.Tilemap;
   private maskImages: Phaser.GameObjects.Image[] = [];
+  private mapMask: Phaser.GameObjects.RenderTexture;
+
   public init(data: Record<string, string>): void {
     this.name = data.name;
   }
@@ -22,18 +24,22 @@ export class MapNode extends Node {
     maskLayer.setVisible(false);
 
     // Create images for each of the mask tiles.
+    this.mapMask = this.scene.add.renderTexture(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    this.mapMask.setDepth(1001).setVisible(false);
     maskLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
       if (tile.index >= 0) {
         const image = tiles.image;
         const coordinates = tiles.getTileTextureCoordinates(tile.index) as ({ x: number, y: number } | null);
         image.add('mask' + tile.index, 0, coordinates.x, coordinates.y, 16, 16);
-        this.maskImages.push(this.scene.make.image({
+        const newImage = this.scene.make.image({
           x: (tile.x * 16) + 8,
           y: (tile.y * 16) + 8,
           key: image,
           frame: 'mask' + tile.index,
           add: true
-        }));
+        });
+        this.maskImages.push(newImage);
+        this.mapMask.draw(newImage);
       }
     });
 
@@ -59,9 +65,6 @@ export class MapNode extends Node {
   }
 
   public created(): void {
-    // Emit the map so other nodes can use it.
-    this.scene.events.emit('mapCreated', this.map);
-
     // Add nodes dynamically based on what's in the tiled map.
     const objects: Phaser.Types.Tilemaps.TiledObject[] = this.map.getObjectLayer('objects').objects;
     for (const obj of objects) {
@@ -74,6 +77,11 @@ export class MapNode extends Node {
         obj: obj
       });
     }
+
+    // Emit the map so other nodes can use it.
+    this.scene.events.emit('mapCreated', this.map);
+
+    this.scene.events.emit('mapMaskCreated', this.mapMask.createBitmapMask());
   }
 
   public destroy(): void {

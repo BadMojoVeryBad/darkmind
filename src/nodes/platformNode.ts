@@ -102,6 +102,12 @@ export class PlatformNode extends Node {
         isAttached: false
       });
     });
+
+    // Hide behind map.
+    this.scene.events.on('mapMaskCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
+      mask.invertAlpha = true;
+      this.sprite.setMask(mask);
+    });
   }
 
   public update(time: number): void {
