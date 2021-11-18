@@ -18,12 +18,15 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
   update(time: number, delta: number, context: PlayerContext): NodeStateInterface<PlayerContext> {
     // Transition to running state if dash ends.
     if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
-      const nextStateName = (context.isOverlappingMap) ? 'dead' : 'running';
+      // If the player is not overlapping a platform or
+      // a tile, they are dead.
+      const nextStateName = (!context.isOverlappingMap && !context.isOnPlatform) ? 'dead' : 'running';
 
       if (nextStateName === 'dead') {
         context.deathAnimation.setPosition(context.player.x, context.player.y);
         context.deathAnimation.visible = true;
         context.deathAnimation.anims.play('puffA');
+        context.deadTime = time;
       }
 
       const nextState = context.states.find((state) => state.getName() === nextStateName);

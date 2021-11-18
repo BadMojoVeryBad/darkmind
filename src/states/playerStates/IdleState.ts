@@ -21,6 +21,17 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
       this.controls.isActive('DOWN') - this.controls.isActive('UP')
     );
 
+    // Check for dead.
+    if (!context.isOverlappingMap && !context.isOnPlatform) {
+      context.deathAnimation.setPosition(context.player.x, context.player.y);
+      context.deathAnimation.visible = true;
+      context.deathAnimation.anims.play('puffA');
+      context.deadTime = time;
+
+      const nextState = context.states.find((state) => state.getName() === 'dead');
+      return nextState.update(time, delta, context);
+    }
+
     // Transition to dashing state if the dash control is active.
     if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dashTime + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
       context.dashTime = time;
@@ -37,7 +48,7 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
     }
 
     // Used for respawning.
-    if (!context.isOverlappingMap) {
+    if (context.isOverlappingMap) {
       context.lastSafePosition = new Phaser.Math.Vector2(context.player.x, context.player.y);
     }
 

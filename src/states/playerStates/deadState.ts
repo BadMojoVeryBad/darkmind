@@ -24,14 +24,14 @@ export class DeadState implements NodeStateInterface<PlayerContext> {
       this.controls.isActive('DOWN') - this.controls.isActive('UP')
     );
 
-    if (context.dashTime + CONSTANTS.PLAYER_RESPAWN_TIME < time) {
+    if (context.deadTime + CONSTANTS.PLAYER_RESPAWN_TIME < time) {
       context.player.visible = true;
       if (inputVector.x !== 0 || inputVector.y !== 0) {
         context.angle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));
       }
       context.player.setPosition(context.lastSafePosition.x, context.lastSafePosition.y);
       const idleState = context.states.find((state) => state.getName() === 'idle');
-      return idleState.update(time, delta, context);
+      return idleState;
     }
 
     if (context.deathAnimation.anims.getProgress() === 1) {

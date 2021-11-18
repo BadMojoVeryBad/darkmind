@@ -110,6 +110,10 @@ export class PlatformNode extends Node {
     });
   }
 
+  public created(): void {
+    this.scene.events.emit('platformCreated', this.sprite);
+  }
+
   public update(time: number): void {
     if (this.moveTime && !this.isTweening) {
       if (time > this.lastMovedTime + this.moveTime - 500) {
@@ -166,6 +170,7 @@ export class PlatformNode extends Node {
         }
 
         this.isTransparent = !this.isTransparent;
+        this.sprite.setData('isTransparent', this.isTransparent);
       }
     }
 

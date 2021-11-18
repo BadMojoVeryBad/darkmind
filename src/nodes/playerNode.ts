@@ -14,6 +14,8 @@ export class PlayerNode extends Node {
   private context: PlayerContext;
   private text: Phaser.GameObjects.Text;
   private colliders: Phaser.Physics.Arcade.Collider[] = [];
+  private platforms: Phaser.Physics.Arcade.Sprite[] = [];
+  private collisionLayer: Phaser.Tilemaps.TilemapLayer;
 
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
@@ -76,9 +78,11 @@ export class PlayerNode extends Node {
       deathAnimation: puff,
       footsteps: footsteps,
       hasStepped: true,
-      isOverlappingMap: false,
+      isOverlappingMap: true,
+      isOnPlatform: false,
       angle: 0,
       dashTime: 0,
+      deadTime: 0,
       dashVector: new Phaser.Math.Vector2(0, 0),
       states: [
         this.idleState,
@@ -99,6 +103,15 @@ export class PlayerNode extends Node {
         }
       }
     });
+
+    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
+      const collisionLayer = map.getLayer('tiles').tilemapLayer;
+      this.collisionLayer = collisionLayer;
+    });
+
+    this.scene.events.on('platformCreated', (platform: Phaser.Physics.Arcade.Sprite) => {
+      this.platforms.push(platform);
+    });
   }
 
   public created(): void {
@@ -108,11 +121,24 @@ export class PlayerNode extends Node {
   }
 
   public update(time: number, delta: number): void {
+    // Update context for next update.
+    this.context.isOnPlatform = false;
+    for (const platform of this.platforms) {
+      if (!platform.getData('isTransparent')) {
+        this.context.isOnPlatform = this.context.isOnPlatform || this.scene.physics.overlap(this.context.player, platform);
+      }
+    }
+    this.scene.physics.overlap(this.context.player, this.collisionLayer, (player, map) => {
+      // This property exists. You just have to trust me.
+      // @ts-ignore
+      this.context.isOverlappingMap = [2, 3, 13, 11, 1, 12, 22, 4, 5].includes(map.index);
+    });
+
     // Update player based on state.
     this.state = this.state.update(time, delta, this.context);
 
     // Debug text.
-    this.text.setText('Delta: ' + delta.toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString());
+    this.text.setText('Delta: ' + delta.toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString() + '\n' + this.context.isOverlappingMap);
   }
 
   public destroy(): void {

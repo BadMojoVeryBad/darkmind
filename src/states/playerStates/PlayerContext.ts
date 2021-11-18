@@ -6,8 +6,10 @@ export type PlayerContext = {
   lastSafePosition: Phaser.Math.Vector2
   hasStepped: boolean
   isOverlappingMap: boolean
+  isOnPlatform: boolean
   angle: number
   dashTime: number
+  deadTime: number
   dashVector: Phaser.Math.Vector2
   states: Array<NodeStateInterface<PlayerContext>>
   deathAnimation: Phaser.GameObjects.Sprite

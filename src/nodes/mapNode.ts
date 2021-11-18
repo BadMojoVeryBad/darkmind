@@ -22,6 +22,9 @@ export class MapNode extends Node {
     const collisionLayer = this.map.createLayer('tiles', tiles).setDepth(10);
     const maskLayer = this.map.createLayer('mask', tiles).setDepth(10);
     maskLayer.setVisible(false);
+    collisionLayer.setCollision([2, 3, 13, 11, 1, 12, 22, 4, 5]);
+
+    // collisionLayer.renderDebug(this.scene.add.graphics().setDepth(1002));
 
     // Create images for each of the mask tiles.
     this.mapMask = this.scene.add.renderTexture(0, 0, this.map.widthInPixels, this.map.heightInPixels);
