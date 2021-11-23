@@ -12,24 +12,26 @@ export type Rectangle = {
  */
 @injectable()
 export class MapMaskNode extends Node {
-  private maskRectangles: Phaser.GameObjects.Rectangle[] = [];
   private mask: Phaser.GameObjects.RenderTexture;
-  private bitmapMask: Phaser.Display.Masks.BitmapMask;
+  private group: Phaser.GameObjects.Group;
 
   public destroy(): void {
-    // TODO: Destroy objects and listeners.
+    this.mask.destroy();
+    this.group.destroy();
   }
 
   public create(): void {
     this.mask = this.scene.add.renderTexture(0, 0, 400, 1600);
     this.mask.setVisible(false);
 
-    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
+    this.scene.events.on('onMapCreated', (map: Phaser.Tilemaps.Tilemap) => {
       this.mask = this.scene.add.renderTexture(0, 0, map.widthInPixels, map.heightInPixels);
       this.mask.setVisible(false);
-      this.mask.setDepth(1001);
+      this.mask.setDepth(1000);
       this.scene.events.emit('maskRenderTextureCreated', this.mask.createBitmapMask());
     });
+
+    this.group = this.scene.make.group({});
   }
 
   public update(): void {
@@ -37,26 +39,13 @@ export class MapMaskNode extends Node {
       return;
     }
 
-    // Delete last frame's mask.
-    this.maskRectangles.forEach(rectangle => rectangle.destroy());
-    this.maskRectangles = [];
+    // Delete last frame's mask and remake it.
+    this.group.destroy();
+    this.group = this.scene.make.group({});
+    this.scene.events.emit('onMaskGroupCreated', this.group);
     this.mask.clear();
-
-    // Create an array of rectangles and allow other
-    // nodes to add to it by listening to and event.
-    const rectangles: Array<Rectangle> = [];
-    this.scene.events.emit('addRectanglesToMapMask', rectangles);
-
-    // Add the rectangles to the render texture.
-    for (const rectangle of rectangles) {
-      const maskRectangle = this.scene.add.rectangle(rectangle.xmin, rectangle.ymin, rectangle.xmax - rectangle.xmin, rectangle.ymax - rectangle.ymin, 0x000000)
-        .setVisible(false);
-
-      this.mask.draw(maskRectangle);
-      this.maskRectangles.push(maskRectangle);
-    }
-
-    // Emit an event to allow other nodes to draw whatever they want to the mask.
-    this.scene.events.emit('drawMaskRenderTexture', this.mask);
+    this.mask.beginDraw();
+    this.mask.batchDraw(this.group);
+    this.mask.endDraw();
   }
 }

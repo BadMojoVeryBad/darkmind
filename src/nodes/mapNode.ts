@@ -11,6 +11,16 @@ export class MapNode extends Node {
   private maskImages: Phaser.GameObjects.Image[] = [];
   private mapMask: Phaser.GameObjects.RenderTexture;
 
+  public destroy(): void {
+    this.map.destroy();
+    this.mapMask.destroy();
+    for (const image of this.maskImages) {
+      image.destroy();
+    }
+    this.scene.events.off('onMapCollisionRectanglesCreated', this.onMapCollisionRectanglesCreated, this);
+    this.scene.events.off('onMaskGroupCreated', this.onMaskGroupCreated, this);
+  }
+
   public init(data: Record<string, string>): void {
     this.name = data.name;
   }
@@ -23,8 +33,6 @@ export class MapNode extends Node {
     const maskLayer = this.map.createLayer('mask', tiles).setDepth(10);
     maskLayer.setVisible(false);
     collisionLayer.setCollision([2, 3, 13, 11, 1, 12, 22, 4, 5]);
-
-    // collisionLayer.renderDebug(this.scene.add.graphics().setDepth(1002));
 
     // Create images for each of the mask tiles.
     this.mapMask = this.scene.add.renderTexture(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -47,24 +55,9 @@ export class MapNode extends Node {
     });
 
     // Listen.
-    this.scene.events.on('drawMaskRenderTexture', (mask: Phaser.GameObjects.RenderTexture) => {
-      for (const image of this.maskImages) {
-        mask.draw(image);
-      }
-    });
+    this.scene.events.on('onMaskGroupCreated', this.onMaskGroupCreated, this);
 
-    this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
-      collisionLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
-        if ([2, 3, 13, 11, 1, 12, 22, 4, 5].includes(tile.index)) {
-          rectangles.push({
-            xmin: Math.round((tile.x * 16)),
-            ymin: Math.round((tile.y * 16)),
-            xmax: Math.round((tile.x * 16) + 16),
-            ymax: Math.round((tile.y * 16) + 16)
-          });
-        }
-      });
-    });
+    this.scene.events.on('onMapCollisionRectanglesCreated', this.onMapCollisionRectanglesCreated, this);
   }
 
   public created(): void {
@@ -82,13 +75,28 @@ export class MapNode extends Node {
     }
 
     // Emit the map so other nodes can use it.
-    this.scene.events.emit('mapCreated', this.map);
+    this.scene.events.emit('onMapCreated', this.map);
 
-    this.scene.events.emit('mapMaskCreated', this.mapMask.createBitmapMask());
+    this.scene.events.emit('onMapMaskCreated', this.mapMask.createBitmapMask());
   }
 
-  public destroy(): void {
-    // TODO: Destroy map objects properly.
-    this.map.destroy();
+  private onMapCollisionRectanglesCreated(rectangles: Array<Rectangle>): void {
+    if (this.map.getLayer('tiles')) {
+      const collisionLayer = this.map.getLayer('tiles').tilemapLayer;
+      collisionLayer.forEachTile((tile: Phaser.Tilemaps.Tile) => {
+        if ([2, 3, 13, 11, 1, 12, 22, 4, 5].includes(tile.index)) {
+          rectangles.push({
+            xmin: Math.round((tile.x * 16)),
+            ymin: Math.round((tile.y * 16)),
+            xmax: Math.round((tile.x * 16) + 16),
+            ymax: Math.round((tile.y * 16) + 16)
+          });
+        }
+      });
+    }
+  }
+
+  private onMaskGroupCreated(group: Phaser.GameObjects.Group): void {
+    group.addMultiple(this.maskImages);
   }
 }

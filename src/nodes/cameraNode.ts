@@ -1,25 +1,38 @@
-import { Node, injectable } from 'phaser-node-framework';
+import { Node, injectable, ControlsInterface, inject } from 'phaser-node-framework';
+import { PlayerNode } from './playerNode';
 
 /**
  * The camera that follows the player in-game.
  */
 @injectable()
 export class CameraNode extends Node {
+  private pressed = false;
+
+  constructor(
+    @inject('controls') private controls: ControlsInterface
+  ) {
+    super();
+  }
+
   public create(): void {
     // Listen to events.
     this.scene.events.on('playerCreated', this.onPlayerCreated, this);
-    this.scene.events.on('mapCreated', this.onMapCreated, this);
+    this.scene.events.on('onMapCreated', this.onMapCreated, this);
+  }
+
+  public update(): void {
+
   }
 
   public destroy(): void {
     // Remove event listeners.
     this.scene.events.off('playerCreated', this.onPlayerCreated, this);
-    this.scene.events.off('mapCreated', this.onMapCreated, this);
+    this.scene.events.off('onMapCreated', this.onMapCreated, this);
   }
 
-  private onPlayerCreated(player: Phaser.Physics.Arcade.Sprite): void {
+  private onPlayerCreated(player: PlayerNode): void {
     this.scene.cameras.main.setZoom(1);
-    this.scene.cameras.main.startFollow(player, false, 0.05, 0.05, 0, 0);
+    this.scene.cameras.main.startFollow(player.getSprite(), false, 0.05, 0.05, 0, 0);
   }
 
   private onMapCreated(map: Phaser.Tilemaps.Tilemap): void {

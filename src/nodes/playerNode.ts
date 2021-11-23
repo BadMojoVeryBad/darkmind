@@ -3,29 +3,38 @@ import { CONSTANTS } from '../constants';
 import { MathServiceInterface } from '../services/mathServiceInterface';
 import { NodeStateInterface } from '../states/nodeStateInterface';
 import { PlayerContext } from '../states/playerStates/playerContext';
+import { PlatformNode } from './platformNode';
 
 /**
  * The player sprite.
  */
 @injectable()
 export class PlayerNode extends Node {
-  private player: Phaser.Physics.Arcade.Sprite;
   private state: NodeStateInterface<PlayerContext>;
   private context: PlayerContext;
   private text: Phaser.GameObjects.Text;
   private colliders: Phaser.Physics.Arcade.Collider[] = [];
-  private platforms: Phaser.Physics.Arcade.Sprite[] = [];
+  private platforms: PlatformNode[] = [];
   private collisionLayer: Phaser.Tilemaps.TilemapLayer;
+  private groundParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
 
   constructor(
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
     @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
     @inject('playerDeadState') private deadState: NodeStateInterface<PlayerContext>,
     @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>,
-    @inject('controls') private controls: ControlsInterface,
-    @inject('mathService') private mathService: MathServiceInterface
+    @inject('controls') private controls: ControlsInterface
   ) {
     super();
+  }
+
+  public destroy(): void {
+    this.context.player.destroy();
+    this.groundParticles.destroy();
+    this.context.deathAnimation.destroy();
+    this.scene.events.off('onMapCollisionCalculated', this.onMapCollisionCalculated, this);
+    this.scene.events.off('onMapCreated', this.onMapCreated, this);
+    this.scene.events.off('onPlatformCreated', this.onMapCreated, this);
   }
 
   public init(): void {
@@ -54,8 +63,8 @@ export class PlayerNode extends Node {
     });
 
     // Create the footsteps particle emitter.
-    const groundParticles = this.scene.add.particles('textures', 'darkestPixel').setDepth(40);
-    const footsteps = groundParticles.createEmitter({
+    this.groundParticles = this.scene.add.particles('textures', 'darkestPixel').setDepth(40);
+    const footsteps = this.groundParticles.createEmitter({
       alpha: 1,
       speed: { max: 10, min: 5 },
       radial: true,
@@ -66,12 +75,13 @@ export class PlayerNode extends Node {
       lifespan: 500,
     });
 
-    // Debug text.
+    // Debug text. One day I'll move this into it's own node.
     this.text = this.scene.add.text(10, 10, 'debug');
     this.text.setScrollFactor(0);
     this.text.setDepth(1000);
 
-    // Create context using all created things for this node.
+    // Create context using all created things for this node. This data is
+    // passed to the state to update the player.
     this.context = {
       player: player,
       lastSafePosition: new Phaser.Math.Vector2(160, 1440),
@@ -92,44 +102,37 @@ export class PlayerNode extends Node {
       ]
     };
 
-    // Set map collision stuff when the map gets created.
-    this.scene.events.on('calculateMapCollision', (rectangles: Phaser.GameObjects.Rectangle[]) => {
-      this.colliders.forEach(collider => collider.destroy());
-      this.colliders = [];
+    // This event is emitted every frame when the map borders are calculated.
+    // This makes the player collide with the map borders.
+    this.scene.events.on('onMapCollisionCalculated', this.onMapCollisionCalculated, this);
 
-      for (const rectangle of rectangles) {
-        if (this.state.getName() !== 'dashing') {
-          this.colliders.push(this.scene.physics.add.collider(player, rectangle));
-        }
-      }
-    });
+    // Keep track of the map's collision layer so that we can calculate
+    // if the player is colliding with it.
+    this.scene.events.on('onMapCreated', this.onMapCreated, this);
 
-    this.scene.events.on('mapCreated', (map: Phaser.Tilemaps.Tilemap) => {
-      const collisionLayer = map.getLayer('tiles').tilemapLayer;
-      this.collisionLayer = collisionLayer;
-    });
-
-    this.scene.events.on('platformCreated', (platform: Phaser.Physics.Arcade.Sprite) => {
-      this.platforms.push(platform);
-    });
+    // We need to keep track of all the platforms in a level in order to
+    // figure out if the player is on one or not.
+    this.scene.events.on('onPlatformCreated', this.onPlatformCreated, this);
   }
 
   public created(): void {
     // Emit events for other nodes.
-    this.scene.events.emit('playerCreated', this.context.player);
-    this.scene.events.emit('stickToPlatform', this.context.player);
+    this.scene.events.emit('playerCreated', this);
+
+    // Platforms listen to this event to know what
+    // objects can be attached to them.
+    this.scene.events.emit('onAttachableToPlatformCreated', this.context.player);
   }
 
   public update(time: number, delta: number): void {
-    // Update context for next update.
+    // Update context for next update. Things like collision.
     this.context.isOnPlatform = false;
     for (const platform of this.platforms) {
-      if (!platform.getData('isTransparent')) {
-        this.context.isOnPlatform = this.context.isOnPlatform || this.scene.physics.overlap(this.context.player, platform);
+      if (!platform.isPlatformTransparent()) {
+        this.context.isOnPlatform = this.context.isOnPlatform || this.scene.physics.overlap(this.context.player, platform.getSprite());
       }
     }
     this.scene.physics.overlap(this.context.player, this.collisionLayer, (player, map) => {
-      // This property exists. You just have to trust me.
       // @ts-ignore
       this.context.isOverlappingMap = [2, 3, 13, 11, 1, 12, 22, 4, 5].includes(map.index);
     });
@@ -138,11 +141,32 @@ export class PlayerNode extends Node {
     this.state = this.state.update(time, delta, this.context);
 
     // Debug text.
-    this.text.setText('Delta: ' + delta.toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString() + '\n' + this.context.isOverlappingMap);
+    this.text.setText('FPS: ' + (1000 / delta).toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString() + '\n' + this.context.isOverlappingMap);
   }
 
-  public destroy(): void {
-    // TODO: Destroy the player properly.
-    this.player.destroy();
+  public getSprite(): Phaser.GameObjects.Sprite {
+    return this.context.player;
+  }
+
+  private onMapCollisionCalculated(rectangles: Phaser.GameObjects.Rectangle[]): void {
+    for (const collider of this.colliders) {
+      collider.destroy();
+    }
+    this.colliders = [];
+
+    for (const rectangle of rectangles) {
+      if (this.state.getName() !== 'dashing') {
+        this.colliders.push(this.scene.physics.add.collider(this.context.player, rectangle));
+      }
+    }
+  }
+
+  private onMapCreated(map: Phaser.Tilemaps.Tilemap): void {
+    const collisionLayer = map.getLayer('tiles').tilemapLayer;
+    this.collisionLayer = collisionLayer;
+  }
+
+  private onPlatformCreated(platform: PlatformNode): void {
+    this.platforms.push(platform);
   }
 }

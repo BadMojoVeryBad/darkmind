@@ -11,8 +11,8 @@ export class IslandParticles extends Node {
   private width: number;
   private height: number;
 
-  constructor() {
-    super();
+  public destroy(): void {
+    this.particles.destroy();
   }
 
   public init(data: Record<string, string>): void {
@@ -45,9 +45,5 @@ export class IslandParticles extends Node {
     emitter.setPosition(this.x, this.y - this.height);
     emitter.start();
     this.particles.setDepth(5);
-  }
-
-  public destroy(): void {
-    this.particles.destroy();
   }
 }

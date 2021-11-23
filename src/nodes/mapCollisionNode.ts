@@ -35,7 +35,7 @@ export class MapCollisionNode extends Node {
     // Create an array of rectangles and allow other
     // nodes to add to it by listening to and event.
     const rectangles: Array<Rectangle> = [];
-    this.scene.events.emit('addRectanglesToMapCollision', rectangles);
+    this.scene.events.emit('onMapCollisionRectanglesCreated', rectangles);
 
     // This giant loop goes through all the rectangles that require collision
     // around them. It checks if any are touching each other and creates edges
@@ -240,7 +240,7 @@ export class MapCollisionNode extends Node {
         });
       }
 
-      collisionRectangles = collisionRectangles.concat(tempCollisionRectangles);
+      collisionRectangles.push(...tempCollisionRectangles);
     }
 
     // Now we create a physics object for each one. Phaser's typings aren't
@@ -260,6 +260,6 @@ export class MapCollisionNode extends Node {
     }
 
     // Emit the collison rectanges so stuff can collide with them.
-    this.scene.events.emit('calculateMapCollision', this.collisionRectangles);
+    this.scene.events.emit('onMapCollisionCalculated', this.collisionRectangles);
   }
 }

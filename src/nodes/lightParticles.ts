@@ -6,11 +6,14 @@ import { Node, injectable } from 'phaser-node-framework';
 @injectable()
 export class LightParticles extends Node {
   private follow: Phaser.GameObjects.Sprite;
+  private lightParticles: Phaser.GameObjects.Particles.ParticleEmitterManager;
   private lightEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
   private maskGraphics: Phaser.GameObjects.Graphics;
 
-  constructor() {
-    super();
+  public destroy(): void {
+    this.scene.events.off('postupdate', this.onPostUpdate, this);
+    this.lightParticles.destroy();
+    this.maskGraphics.destroy();
   }
 
   public init(data: Record<string, unknown>): void {
@@ -18,10 +21,10 @@ export class LightParticles extends Node {
   }
 
   public create(): void {
-    const lightParticles = this.scene.add.particles('textures', 'lightestPixel');
-    lightParticles.setDepth(40);
+    this.lightParticles = this.scene.add.particles('textures', 'lightestPixel');
+    this.lightParticles.setDepth(40);
 
-    this.lightEmitter = lightParticles.createEmitter({
+    this.lightEmitter = this.lightParticles.createEmitter({
       alpha: 1,
       speedX: { min: 0, max: 0 },
       speedY: { min: -10, max: -10 },
@@ -55,10 +58,6 @@ export class LightParticles extends Node {
     });
 
     this.scene.events.on('postupdate', this.onPostUpdate, this);
-  }
-
-  public destroy(): void {
-    this.scene.events.off('postupdate', this.onPostUpdate, this);
   }
 
   private onPostUpdate() {

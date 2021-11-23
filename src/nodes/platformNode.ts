@@ -29,6 +29,16 @@ export class PlatformNode extends Node {
   private prevPosition = new Phaser.Math.Vector2();
   private attachableObjects: AttachableObject[] = [];
 
+  public destroy(): void {
+    this.sprite.destroy();
+    this.particles.destroy();
+    this.maskSprite.destroy();
+    this.scene.events.off('onMaskGroupCreated', this.onMaskGroupCreated, this);
+    this.scene.events.off('onMapCollisionRectanglesCreated', this.onMapCollisionRectanglesCreated, this);
+    this.scene.events.off('onAttachableToPlatformCreated', this.onAttachableToPlatformCreated, this);
+    this.scene.events.off('onMapMaskCreated', this.onMapMaskCreated, this);
+  }
+
   constructor(@inject('tilemapService') private tilemapService: TilemapStrategyInterface) {
     super();
   }
@@ -77,41 +87,20 @@ export class PlatformNode extends Node {
     this.particles.setDepth(5);
 
     // Light mask.
-    this.scene.events.on('drawMaskRenderTexture', (mask: Phaser.GameObjects.RenderTexture) => {
-      if (!this.isTransparent) {
-        mask.draw(this.maskSprite);
-      }
-    });
+    this.scene.events.on('onMaskGroupCreated', this.onMaskGroupCreated, this);
 
     // Collision.
-    this.scene.events.on('addRectanglesToMapCollision', (rectangles: Array<Rectangle>) => {
-      if (!this.isTransparent) {
-        rectangles.push({
-          xmin: Math.round(this.sprite.x - 8),
-          ymin: Math.round(this.sprite.y - 8),
-          xmax: Math.round(this.sprite.x + 8),
-          ymax: Math.round(this.sprite.y + 8)
-        });
-      }
-    });
+    this.scene.events.on('onMapCollisionRectanglesCreated', this.onMapCollisionRectanglesCreated, this);
 
     // Player stick to platform as it moves.
-    this.scene.events.on('stickToPlatform', (gameObject: Phaser.Physics.Arcade.Sprite) => {
-      this.attachableObjects.push({
-        sprite: gameObject,
-        isAttached: false
-      });
-    });
+    this.scene.events.on('onAttachableToPlatformCreated', this.onAttachableToPlatformCreated, this);
 
     // Hide behind map.
-    this.scene.events.on('mapMaskCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
-      mask.invertAlpha = true;
-      this.sprite.setMask(mask);
-    });
+    this.scene.events.on('onMapMaskCreated', this.onMapMaskCreated, this);
   }
 
   public created(): void {
-    this.scene.events.emit('platformCreated', this.sprite);
+    this.scene.events.emit('onPlatformCreated', this);
   }
 
   public update(time: number): void {
@@ -170,7 +159,6 @@ export class PlatformNode extends Node {
         }
 
         this.isTransparent = !this.isTransparent;
-        this.sprite.setData('isTransparent', this.isTransparent);
       }
     }
 
@@ -204,9 +192,44 @@ export class PlatformNode extends Node {
     this.emitter.setPosition(this.sprite.x - 8, this.sprite.y);
   }
 
-  public destroy(): void {
-    // TODO: Destroy objects and listeners.
-    this.sprite.destroy();
-    this.particles.destroy();
+  public getSprite(): Phaser.GameObjects.Sprite {
+    return this.sprite;
+  }
+
+  public isPlatformTransparent(): boolean {
+    return this.isTransparent;
+  }
+
+  public isPlatformMoving(): boolean {
+    return this.isTweening;
+  }
+
+  private onMaskGroupCreated(group: Phaser.GameObjects.Group): void {
+    if (!this.isTransparent) {
+      group.add(this.maskSprite);
+    }
+  }
+
+  private onMapCollisionRectanglesCreated(rectangles: Array<Rectangle>): void {
+    if (!this.isTransparent) {
+      rectangles.push({
+        xmin: Math.round(this.sprite.x - 8),
+        ymin: Math.round(this.sprite.y - 8),
+        xmax: Math.round(this.sprite.x + 8),
+        ymax: Math.round(this.sprite.y + 8)
+      });
+    }
+  }
+
+  private onAttachableToPlatformCreated(gameObject: Phaser.Physics.Arcade.Sprite): void {
+    this.attachableObjects.push({
+      sprite: gameObject,
+      isAttached: false
+    });
+  }
+
+  private onMapMaskCreated(mask: Phaser.Display.Masks.BitmapMask): void {
+    mask.invertAlpha = true;
+    this.sprite.setMask(mask);
   }
 }

@@ -8,8 +8,10 @@ export class CharacterLight extends Node {
   private follow: Phaser.GameObjects.Sprite;
   private groundLight: Phaser.GameObjects.Sprite;
 
-  constructor() {
-    super();
+  public destroy(): void {
+    this.groundLight.destroy();
+    this.scene.events.off('maskCreated', this.onMaskCreated, this);
+    this.scene.events.off('postupdate', this.onPostUpdate, this);
   }
 
   public init(data: Record<string, unknown>): void {
@@ -23,12 +25,6 @@ export class CharacterLight extends Node {
 
     this.scene.events.on('maskRenderTextureCreated', this.onMaskCreated, this);
     this.scene.events.on('postupdate', this.onPostUpdate, this);
-  }
-
-  public destroy(): void {
-    // TODO: Destroy objects properly.
-    this.scene.events.off('maskCreated', this.onMaskCreated, this);
-    this.scene.events.off('postupdate', this.onPostUpdate, this);
   }
 
   private onMaskCreated(mask: Phaser.Display.Masks.BitmapMask): void {
