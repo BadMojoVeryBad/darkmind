@@ -19,8 +19,7 @@ export class CameraNode extends Node {
 
   private onPlayerCreated(player: Phaser.Physics.Arcade.Sprite): void {
     this.scene.cameras.main.setZoom(1);
-    this.scene.cameras.main.startFollow(player);
-    this.scene.cameras.main.setLerp(0.05);
+    this.scene.cameras.main.startFollow(player, false, 0.05, 0.05, 0, 0);
   }
 
   private onMapCreated(map: Phaser.Tilemaps.Tilemap): void {
