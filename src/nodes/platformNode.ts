@@ -28,6 +28,8 @@ export class PlatformNode extends Node {
   private isTransparent = false;
   private prevPosition = new Phaser.Math.Vector2();
   private attachableObjects: AttachableObject[] = [];
+  private startOffset: number;
+  private unpaused = false;
 
   public destroy(): void {
     this.sprite.destroy();
@@ -46,6 +48,7 @@ export class PlatformNode extends Node {
   public init(data: Record<string, unknown>): void {
     this.x = data.x as number + 8;
     this.y = data.y as number - 8;
+    this.startOffset = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.lastdisappearedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.lastMovedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.disappearTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'disappearTime', 0);
@@ -97,6 +100,10 @@ export class PlatformNode extends Node {
 
     // Hide behind map.
     this.scene.events.on('onMapMaskCreated', this.onMapMaskCreated, this);
+
+    this.scene.events.on('unpause', () => {
+      this.unpaused = true;
+    });
   }
 
   public created(): void {
@@ -104,6 +111,12 @@ export class PlatformNode extends Node {
   }
 
   public update(time: number): void {
+    if (this.unpaused) {
+      this.lastdisappearedTime = time + this.startOffset;
+      this.lastMovedTime = time + this.startOffset;
+      this.unpaused = false;
+    }
+
     if (this.moveTime && !this.isTweening) {
       if (time > this.lastMovedTime + this.moveTime - 500) {
         this.sprite.anims.play('platformWiggling', true);

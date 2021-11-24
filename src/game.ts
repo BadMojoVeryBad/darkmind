@@ -22,6 +22,7 @@ import { TilemapStrategyInterface } from './services/tilemapServiceInterface';
 import { TilemapService } from './services/tilemapService';
 import { MapCollisionNode } from './nodes/mapCollisionNode';
 import { MapMaskNode } from './nodes/mapMaskNode';
+import { PauseNode } from './nodes/pauseNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -34,6 +35,7 @@ const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
 game.registerScene('default', DefaultScene);
 
 // Register components.
+game.registerNode('pause', PauseNode);
 game.registerNode('player', PlayerNode);
 game.registerNode('characterLight', CharacterLight);
 game.registerNode('camera', CameraNode);

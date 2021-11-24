@@ -950,15 +950,48 @@
                  "width":16,
                  "x":224,
                  "y":1376
+                }, 
+                {
+                 "gid":7,
+                 "height":16,
+                 "id":70,
+                 "name":"platform",
+                 "properties":[
+                        {
+                         "name":"moveTime",
+                         "type":"int",
+                         "value":3000
+                        }, 
+                        {
+                         "name":"moveX",
+                         "type":"int",
+                         "value":192
+                        }, 
+                        {
+                         "name":"moveY",
+                         "type":"int",
+                         "value":1504
+                        }, 
+                        {
+                         "name":"startOffset",
+                         "type":"int",
+                         "value":100
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":144,
+                 "y":1504
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":70,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.0",

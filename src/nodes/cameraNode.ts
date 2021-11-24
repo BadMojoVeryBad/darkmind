@@ -1,4 +1,4 @@
-import { Node, injectable, ControlsInterface, inject } from 'phaser-node-framework';
+import { Node, injectable } from 'phaser-node-framework';
 import { PlayerNode } from './playerNode';
 
 /**
@@ -6,22 +6,10 @@ import { PlayerNode } from './playerNode';
  */
 @injectable()
 export class CameraNode extends Node {
-  private pressed = false;
-
-  constructor(
-    @inject('controls') private controls: ControlsInterface
-  ) {
-    super();
-  }
-
   public create(): void {
     // Listen to events.
     this.scene.events.on('playerCreated', this.onPlayerCreated, this);
     this.scene.events.on('onMapCreated', this.onMapCreated, this);
-  }
-
-  public update(): void {
-
   }
 
   public destroy(): void {
