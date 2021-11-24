@@ -1,6 +1,4 @@
-import { Node, inject, injectable, ControlsInterface } from 'phaser-node-framework';
-import { CONSTANTS } from '../constants';
-import { MathServiceInterface } from '../services/mathServiceInterface';
+import { Node, inject, injectable } from 'phaser-node-framework';
 import { NodeStateInterface } from '../states/nodeStateInterface';
 import { PlayerContext } from '../states/playerStates/playerContext';
 import { PlatformNode } from './platformNode';
@@ -22,14 +20,14 @@ export class PlayerNode extends Node {
     @inject('playerIdleState') private idleState: NodeStateInterface<PlayerContext>,
     @inject('playerRunningState') private runningState: NodeStateInterface<PlayerContext>,
     @inject('playerDeadState') private deadState: NodeStateInterface<PlayerContext>,
-    @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>,
-    @inject('controls') private controls: ControlsInterface
+    @inject('playerDashingState') private dashingState: NodeStateInterface<PlayerContext>
   ) {
     super();
   }
 
   public destroy(): void {
     this.context.player.destroy();
+    this.context.shadow.destroy();
     this.groundParticles.destroy();
     this.context.deathAnimation.destroy();
     this.scene.events.off('onMapCollisionCalculated', this.onMapCollisionCalculated, this);
@@ -43,10 +41,17 @@ export class PlayerNode extends Node {
 
   public create(): void {
     // Create player.
-    const player = this.scene.physics.add.sprite(56, 1431, 'textures', 'playerIdleSide1').setScale(1).setDepth(20);
+    const player = this.scene.physics.add.sprite(56, 1431, 'textures', 'playerIdleSide1').setScale(1);
     player.setSize(4, 4);
     player.setOffset(14, 25);
     player.setDepth(50);
+
+    const playerShadow = this.scene.add.sprite(56, 1431, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(48);
+    const pipeline = (this.scene.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.get('characterShadowShader');
+    playerShadow.setPipeline(pipeline);
+    this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
+      playerShadow.setMask(mask);
+    });
 
     // Death and respawn 'poof'.
     const puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
@@ -63,7 +68,7 @@ export class PlayerNode extends Node {
     });
 
     // Create the footsteps particle emitter.
-    this.groundParticles = this.scene.add.particles('textures', 'darkestPixel').setDepth(40);
+    this.groundParticles = this.scene.add.particles('textures', 'darkestPixel').setDepth(49);
     const footsteps = this.groundParticles.createEmitter({
       alpha: 1,
       speed: { max: 10, min: 5 },
@@ -84,6 +89,7 @@ export class PlayerNode extends Node {
     // passed to the state to update the player.
     this.context = {
       player: player,
+      shadow: playerShadow,
       lastSafePosition: new Phaser.Math.Vector2(160, 1440),
       deathAnimation: puff,
       footsteps: footsteps,

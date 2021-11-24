@@ -23,6 +23,7 @@ import { TilemapService } from './services/tilemapService';
 import { MapCollisionNode } from './nodes/mapCollisionNode';
 import { MapMaskNode } from './nodes/mapMaskNode';
 import { PauseNode } from './nodes/pauseNode';
+import { CharacterShadowShader } from './shaders/characterShadowShader';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -89,6 +90,9 @@ game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleS
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadState);
+
+// WebGL pipelines.
+game.registerPipeline('characterShadowShader', CharacterShadowShader);
 
 // Start game.
 game.start();

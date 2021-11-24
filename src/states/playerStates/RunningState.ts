@@ -81,6 +81,28 @@ export class RunningState implements NodeStateInterface<PlayerContext> {
       context.hasStepped = true;
     }
 
+    // Shadow stuff.
+    let shadowAngle = 'Up';
+    let flipped = false;
+    let yOffset = 12;
+    if (currentAngle === 'Side') {
+      shadowAngle = 'Up';
+    } else if (currentAngle === 'Up') {
+      flipped = true;
+      shadowAngle = 'Side';
+    } else if (currentAngle === 'Down') {
+      shadowAngle = 'Side';
+      yOffset = 14;
+    } else if (currentAngle === 'DiagonalUp') {
+      flipped = true;
+      shadowAngle = 'DiagonalDown';
+    } else if (currentAngle === 'DiagonalDown') {
+      shadowAngle = 'DiagonalUp';
+    }
+    context.shadow.anims.play(`playerRunning${shadowAngle}`, true);
+    context.shadow.setPosition(context.player.x + 16, context.player.y + yOffset);
+    context.shadow.flipX = flipped;
+
     return this;
   }
 }
