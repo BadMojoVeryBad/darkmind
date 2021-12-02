@@ -12,6 +12,8 @@ export type PlayerContext = {
   dashTime: number
   deadTime: number
   dashVector: Phaser.Math.Vector2
+  dashStartX: number
+  dashStartY: number
   states: Array<NodeStateInterface<PlayerContext>>
   deathAnimation: Phaser.GameObjects.Sprite
 };

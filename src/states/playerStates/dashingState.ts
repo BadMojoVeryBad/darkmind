@@ -17,7 +17,9 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
 
   update(time: number, delta: number, context: PlayerContext): NodeStateInterface<PlayerContext> {
     // Transition to running state if dash ends.
-    if (context.dashTime + CONSTANTS.PLAYER_DASH_TIME < time) {
+    if (Math.abs(context.player.x - context.dashStartX) > 25 ||
+        Math.abs(context.player.y - context.dashStartY) > 25) {
+
       // If the player is not overlapping a platform or
       // a tile, they are dead.
       const nextStateName = (!context.isOverlappingMap && !context.isOnPlatform) ? 'dead' : 'running';

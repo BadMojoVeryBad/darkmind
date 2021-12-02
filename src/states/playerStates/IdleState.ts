@@ -37,6 +37,8 @@ export class IdleState implements NodeStateInterface<PlayerContext> {
       context.dashTime = time;
       context.angle = this.mathService.closestMultiple(context.angle, Math.PI / 4);
       context.dashVector = this.mathService.radiansToVector(context.angle);
+      context.dashStartX = context.player.x;
+      context.dashStartY = context.player.y;
       const dashState = context.states.find((state) => state.getName() === 'dashing');
       return dashState.update(time, delta, context);
     }

@@ -41,12 +41,12 @@ export class PlayerNode extends Node {
 
   public create(): void {
     // Create player.
-    const player = this.scene.physics.add.sprite(56, 1431, 'textures', 'playerIdleSide1').setScale(1);
+    const player = this.scene.physics.add.sprite(56, 1432, 'textures', 'playerIdleSide1').setScale(1);
     player.setSize(4, 4);
     player.setOffset(14, 25);
     player.setDepth(50);
 
-    const playerShadow = this.scene.add.sprite(56, 1431, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(48);
+    const playerShadow = this.scene.add.sprite(56, 1432, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(48);
     const pipeline = (this.scene.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.get('characterShadowShader');
     playerShadow.setPipeline(pipeline);
     this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
@@ -82,6 +82,7 @@ export class PlayerNode extends Node {
 
     // Debug text. One day I'll move this into it's own node.
     this.text = this.scene.add.text(10, 10, 'debug');
+    this.text.setScale(1);
     this.text.setScrollFactor(0);
     this.text.setDepth(1000);
 
@@ -100,6 +101,8 @@ export class PlayerNode extends Node {
       dashTime: 0,
       deadTime: 0,
       dashVector: new Phaser.Math.Vector2(0, 0),
+      dashStartX: 0,
+      dashStartY: 0,
       states: [
         this.idleState,
         this.runningState,
@@ -147,7 +150,7 @@ export class PlayerNode extends Node {
     this.state = this.state.update(time, delta, this.context);
 
     // Debug text.
-    this.text.setText('FPS: ' + (1000 / delta).toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString() + '\n' + this.context.isOverlappingMap);
+    this.text.setText('FPS: ' + (1000 / delta).toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString());
   }
 
   public getSprite(): Phaser.GameObjects.Sprite {
