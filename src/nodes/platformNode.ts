@@ -29,6 +29,7 @@ export class PlatformNode extends Node {
   private prevPosition = new Phaser.Math.Vector2();
   private attachableObjects: AttachableObject[] = [];
   private startOffset: number;
+  private idleTime: number;
   private unpaused = false;
 
   public destroy(): void {
@@ -48,6 +49,7 @@ export class PlatformNode extends Node {
   public init(data: Record<string, unknown>): void {
     this.x = data.x as number + 8;
     this.y = data.y as number - 8;
+    this.idleTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'idleTime', 2000);
     this.startOffset = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.lastdisappearedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
     this.lastMovedTime = this.tilemapService.getProperty(data.obj as Phaser.Types.Tilemaps.TiledObject, 'startOffset', 0);
@@ -118,20 +120,20 @@ export class PlatformNode extends Node {
     }
 
     if (this.moveTime && !this.isTweening) {
-      if (time > this.lastMovedTime + this.moveTime - 500) {
+      if (time > this.lastMovedTime + this.idleTime - 500) {
         this.sprite.anims.play('platformWiggling', true);
         this.maskSprite.anims.play('platformWigglingMask', true);
       }
 
-      if (time > this.lastMovedTime + this.moveTime) {
-        this.lastMovedTime = this.lastMovedTime + this.moveTime;
+      if (time > this.lastMovedTime + this.idleTime) {
+        this.lastMovedTime = this.lastMovedTime + this.idleTime + this.moveTime;
         this.sprite.anims.play('platformIdle', true);
         this.maskSprite.anims.play('platformIdleMask', true);
         this.isTweening = true;
         if (this.x === this.sprite.x && this.y === this.sprite.y) {
           const tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
-            duration: 500,
+            duration: this.moveTime,
             x: this.moveX,
             y: this.moveY,
             onComplete: () => {
@@ -142,7 +144,7 @@ export class PlatformNode extends Node {
         } else {
           const tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
-            duration: 500,
+            duration: this.moveTime,
             x: this.x,
             y: this.y,
             onComplete: () => {
@@ -155,13 +157,16 @@ export class PlatformNode extends Node {
     }
 
     if (this.disappearTime) {
-      if (time > this.lastdisappearedTime + this.disappearTime - 500 && !this.isTransparent) {
+      const offsetAmount = (this.isTransparent) ? this.disappearTime : this.idleTime;
+
+      if (time > this.lastdisappearedTime + this.idleTime - 500 && !this.isTransparent) {
         this.sprite.anims.play('platformWiggling', true);
         this.maskSprite.anims.play('platformWigglingMask', true);
       }
 
-      if (time > this.lastdisappearedTime + this.disappearTime) {
-        this.lastdisappearedTime = this.lastdisappearedTime + this.disappearTime;
+      if (time > this.lastdisappearedTime + offsetAmount) {
+        this.lastdisappearedTime = this.lastdisappearedTime + offsetAmount;
+
         if (this.isTransparent) {
           this.sprite.anims.play('platformIdle', true);
           this.maskSprite.anims.play('platformIdleMask', true);

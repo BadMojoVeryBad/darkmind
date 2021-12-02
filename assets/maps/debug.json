@@ -103,6 +103,17 @@
                  "height":16,
                  "id":49,
                  "name":"platform",
+                 "properties":[
+                        {
+                         "name":"disappearTime",
+                         "type":"int",
+                         "value":1000
+                        }, 
+                        {
+                         "name":"idleTime",
+                         "type":"int",
+                         "value":3000
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -116,6 +127,11 @@
                  "id":70,
                  "name":"platform",
                  "properties":[
+                        {
+                         "name":"idleTime",
+                         "type":"int",
+                         "value":1000
+                        }, 
                         {
                          "name":"moveTime",
                          "type":"int",
