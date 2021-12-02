@@ -111,6 +111,11 @@ export class PlayerNode extends Node {
       ]
     };
 
+    this.scene.events.on('playerStart', (event: Phaser.Types.Tilemaps.TiledObject) => {
+      this.context.player.x = event.x + 8;
+      this.context.player.y = event.y - 16;
+    });
+
     // This event is emitted every frame when the map borders are calculated.
     // This makes the player collide with the map borders.
     this.scene.events.on('onMapCollisionCalculated', this.onMapCollisionCalculated, this);

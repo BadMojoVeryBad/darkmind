@@ -64,7 +64,6 @@ export class MapNode extends Node {
     // Add nodes dynamically based on what's in the tiled map.
     const objects: Phaser.Types.Tilemaps.TiledObject[] = this.map.getObjectLayer('objects').objects;
     for (const obj of objects) {
-      this.scene.events.emit(obj.name, obj);
       this.addNode(obj.name, {
         x: obj.x,
         y: obj.y,
@@ -72,6 +71,11 @@ export class MapNode extends Node {
         height: obj.height,
         obj: obj
       });
+    }
+
+    const events: Phaser.Types.Tilemaps.TiledObject[] = this.map.getObjectLayer('events').objects;
+    for (const ev of events) {
+      this.scene.events.emit(ev.name, ev);
     }
 
     // Emit the map so other nodes can use it.
