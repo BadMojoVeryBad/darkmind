@@ -31,6 +31,7 @@ export class PlatformNode extends Node {
   private startOffset: number;
   private idleTime: number;
   private unpaused = false;
+  private tween: Phaser.Tweens.Tween;
 
   public destroy(): void {
     this.sprite.destroy();
@@ -114,8 +115,14 @@ export class PlatformNode extends Node {
 
   public update(time: number): void {
     if (this.unpaused) {
-      this.lastdisappearedTime = time + this.startOffset;
+      this.sprite.x = this.x;
+      this.sprite.y = this.y;
+      this.isTweening = false;
+      if (this.tween) {
+        this.tween.remove();
+      }
       this.lastMovedTime = time + this.startOffset;
+      this.lastdisappearedTime = time + this.startOffset;
       this.unpaused = false;
     }
 
@@ -131,25 +138,25 @@ export class PlatformNode extends Node {
         this.maskSprite.anims.play('platformIdleMask', true);
         this.isTweening = true;
         if (this.x === this.sprite.x && this.y === this.sprite.y) {
-          const tween = this.scene.tweens.add({
+          this.tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
             duration: this.moveTime,
             x: this.moveX,
             y: this.moveY,
             onComplete: () => {
               this.isTweening = false;
-              tween.remove();
+              this.tween.remove();
             }
           });
         } else {
-          const tween = this.scene.tweens.add({
+          this.tween = this.scene.tweens.add({
             targets: [ this.sprite, this.maskSprite ],
             duration: this.moveTime,
             x: this.x,
             y: this.y,
             onComplete: () => {
               this.isTweening = false;
-              tween.remove();
+              this.tween.remove();
             }
           });
         }

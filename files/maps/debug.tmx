@@ -214,11 +214,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="objects" locked="1">
+ <objectgroup id="2" name="objects">
   <object id="5" name="islandParticles" gid="7" x="32" y="1464" width="192" height="8"/>
   <object id="30" name="platform" gid="7" x="464" y="1248" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
+    <property name="idleTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
@@ -226,14 +227,13 @@
   <object id="39" name="islandParticles" gid="7" x="352" y="1480" width="64" height="8"/>
   <object id="49" name="platform" gid="7" x="528" y="1472" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="1000"/>
     <property name="idleTime" type="int" value="3000"/>
    </properties>
   </object>
   <object id="70" name="platform" gid="7" x="608" y="1440" width="16" height="16">
    <properties>
-    <property name="idleTime" type="int" value="1000"/>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1500"/>
+    <property name="moveTime" type="int" value="1500"/>
     <property name="moveX" type="int" value="608"/>
     <property name="moveY" type="int" value="1408"/>
     <property name="startOffset" type="int" value="0"/>
@@ -245,15 +245,17 @@
   <object id="74" name="islandParticles" gid="7" x="224" y="1448" width="64" height="8"/>
   <object id="75" name="platform" gid="7" x="576" y="1360" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1500"/>
+    <property name="moveTime" type="int" value="1500"/>
     <property name="moveX" type="int" value="576"/>
     <property name="moveY" type="int" value="1298"/>
-    <property name="startOffset" type="int" value="0"/>
+    <property name="startOffset" type="int" value="3000"/>
    </properties>
   </object>
   <object id="76" name="platform" gid="7" x="608" y="1232" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1500"/>
+    <property name="moveTime" type="int" value="1500"/>
     <property name="moveX" type="int" value="544"/>
     <property name="moveY" type="int" value="1232"/>
     <property name="startOffset" type="int" value="0"/>
@@ -261,13 +263,15 @@
   </object>
   <object id="77" name="platform" gid="7" x="384" y="1136" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2500"/>
+    <property name="idleTime" type="int" value="2500"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="78" name="platform" gid="7" x="384" y="1104" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="2500"/>
+    <property name="moveTime" type="int" value="2500"/>
     <property name="moveX" type="int" value="432"/>
     <property name="moveY" type="int" value="1104"/>
     <property name="startOffset" type="int" value="0"/>
@@ -275,7 +279,8 @@
   </object>
   <object id="79" name="platform" gid="7" x="544" y="1104" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1500"/>
+    <property name="moveTime" type="int" value="1500"/>
     <property name="moveX" type="int" value="544"/>
     <property name="moveY" type="int" value="1056"/>
     <property name="startOffset" type="int" value="0"/>
@@ -283,109 +288,118 @@
   </object>
   <object id="80" name="platform" gid="7" x="512" y="1104" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="1500"/>
+    <property name="idleTime" type="int" value="1500"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="81" name="platform" gid="7" x="672" y="992" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="82" name="platform" gid="7" x="672" y="1008" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="83" name="platform" gid="7" x="672" y="1024" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="84" name="platform" gid="7" x="688" y="992" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="85" name="platform" gid="7" x="704" y="992" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="86" name="platform" gid="7" x="688" y="1024" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="87" name="platform" gid="7" x="688" y="1008" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="88" name="platform" gid="7" x="704" y="1008" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="89" name="platform" gid="7" x="704" y="1024" width="16" height="16">
    <properties>
-    <property name="disappearTime" type="int" value="5000"/>
+    <property name="disappearTime" type="int" value="2000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="90" name="platform" gid="7" x="736" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="91" name="platform" gid="7" x="752" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="100"/>
    </properties>
   </object>
   <object id="92" name="platform" gid="7" x="768" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="200"/>
    </properties>
   </object>
   <object id="93" name="platform" gid="7" x="784" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="300"/>
    </properties>
   </object>
   <object id="94" name="platform" gid="7" x="800" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="400"/>
    </properties>
   </object>
   <object id="95" name="platform" gid="7" x="816" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="500"/>
    </properties>
   </object>
   <object id="96" name="platform" gid="7" x="832" y="928" width="16" height="16">
    <properties>
     <property name="disappearTime" type="int" value="5000"/>
+    <property name="idleTime" type="int" value="5000"/>
     <property name="startOffset" type="int" value="600"/>
    </properties>
   </object>
   <object id="97" name="platform" gid="7" x="880" y="1136" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1000"/>
+    <property name="moveTime" type="int" value="1000"/>
     <property name="moveX" type="int" value="832"/>
     <property name="moveY" type="int" value="1136"/>
     <property name="startOffset" type="int" value="0"/>
@@ -393,30 +407,33 @@
   </object>
   <object id="98" name="platform" gid="7" x="816" y="1136" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1000"/>
+    <property name="moveTime" type="int" value="1000"/>
     <property name="moveX" type="int" value="816"/>
     <property name="moveY" type="int" value="1184"/>
-    <property name="startOffset" type="int" value="3000"/>
+    <property name="startOffset" type="int" value="2000"/>
    </properties>
   </object>
   <object id="99" name="platform" gid="7" x="816" y="1200" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1000"/>
+    <property name="moveTime" type="int" value="1000"/>
     <property name="moveX" type="int" value="864"/>
     <property name="moveY" type="int" value="1200"/>
-    <property name="startOffset" type="int" value="6000"/>
+    <property name="startOffset" type="int" value="0"/>
    </properties>
   </object>
   <object id="100" name="platform" gid="7" x="880" y="1200" width="16" height="16">
    <properties>
-    <property name="moveTime" type="int" value="3000"/>
+    <property name="idleTime" type="int" value="1000"/>
+    <property name="moveTime" type="int" value="1000"/>
     <property name="moveX" type="int" value="880"/>
     <property name="moveY" type="int" value="1248"/>
-    <property name="startOffset" type="int" value="9000"/>
+    <property name="startOffset" type="int" value="2000"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="5" name="events" locked="1">
-  <object id="102" name="playerStart" gid="7" x="48" y="1440" width="16" height="16"/>
+  <object id="102" name="playerStart" gid="7" x="49" y="1440" width="16" height="16"/>
  </objectgroup>
 </map>
