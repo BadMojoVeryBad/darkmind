@@ -14,7 +14,7 @@ void main()
   gl_FragColor = texture;
 
   if (gl_FragColor.a > 0.0) {
-    gl_FragColor = vec4(0.2588,0.2314,0.4118,1);
+    gl_FragColor = vec4(0.7843,0.7843,0.7843,1);
   }
 }
 `;

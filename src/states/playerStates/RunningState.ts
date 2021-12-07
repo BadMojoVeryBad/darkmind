@@ -27,7 +27,7 @@ export class RunningState implements NodeStateInterface<PlayerContext> {
     if (!context.isOverlappingMap && !context.isOnPlatform) {
       context.deathAnimation.setPosition(context.player.x, context.player.y);
       context.deathAnimation.visible = true;
-      context.deathAnimation.anims.play('puffA');
+      context.deathAnimation.anims.play('puff');
       context.deadTime = time;
 
       const nextState = context.states.find((state) => state.getName() === 'dead');

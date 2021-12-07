@@ -69,7 +69,7 @@ game.registerAnimation('textures', 'playerDashSide', 1, 6, false, 24);
 game.registerAnimation('textures', 'playerDashDiagonalUp', 1, 6, false, 24);
 game.registerAnimation('textures', 'playerDashDiagonalDown', 1, 6, false, 24);
 game.registerAnimation('textures', 'groundLight', 1, 12, true, 12);
-game.registerAnimation('textures', 'puffA', 1, 7, false, 24);
+game.registerAnimation('textures', 'puff', 1, 7, false, 24);
 game.registerAnimation('textures', 'platformIdle', 1, 8, true, 12);
 game.registerAnimation('textures', 'platformWiggling', 1, 2, true, 12);
 game.registerAnimation('textures', 'platformIdleMask', 1, 8, true, 12);

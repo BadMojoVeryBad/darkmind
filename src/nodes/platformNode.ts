@@ -117,6 +117,8 @@ export class PlatformNode extends Node {
     if (this.unpaused) {
       this.sprite.x = this.x;
       this.sprite.y = this.y;
+      this.maskSprite.x = this.x;
+      this.maskSprite.y = this.y;
       this.isTweening = false;
       if (this.tween) {
         this.tween.remove();

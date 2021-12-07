@@ -54,7 +54,7 @@ export class PlayerNode extends Node {
     });
 
     // Death and respawn 'poof'.
-    const puff = this.scene.add.sprite(0, 0, 'textures', 'puffA1').setDepth(19);
+    const puff = this.scene.add.sprite(0, 0, 'textures', 'puff1').setDepth(19);
     puff.visible = false;
 
     // Create the light on the ground that follows around the player.

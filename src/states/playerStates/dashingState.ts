@@ -27,7 +27,7 @@ export class DashingState implements NodeStateInterface<PlayerContext> {
       if (nextStateName === 'dead') {
         context.deathAnimation.setPosition(context.player.x, context.player.y);
         context.deathAnimation.visible = true;
-        context.deathAnimation.anims.play('puffA');
+        context.deathAnimation.anims.play('puff');
         context.deadTime = time;
       }
 
