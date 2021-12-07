@@ -969,6 +969,42 @@
                  "width":16,
                  "x":880,
                  "y":1200
+                }, 
+                {
+                 "gid":7,
+                 "height":16,
+                 "id":103,
+                 "name":"lightbulb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":224,
+                 "y":1440
+                }, 
+                {
+                 "gid":7,
+                 "height":16,
+                 "id":105,
+                 "name":"lightbulb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":144,
+                 "y":1430
+                }, 
+                {
+                 "gid":7,
+                 "height":16,
+                 "id":106,
+                 "name":"lightbulb",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":120,
+                 "y":1448
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1000,7 +1036,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":103,
+ "nextobjectid":107,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.0",

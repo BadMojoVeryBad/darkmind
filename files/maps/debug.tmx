@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="103">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="107">
  <editorsettings>
   <export target="../../assets/maps/debug.json" format="json"/>
  </editorsettings>
@@ -214,7 +214,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="objects">
+ <objectgroup id="2" name="objects" locked="1">
   <object id="5" name="islandParticles" gid="7" x="32" y="1464" width="192" height="8"/>
   <object id="30" name="platform" gid="7" x="464" y="1248" width="16" height="16">
    <properties>
@@ -432,6 +432,9 @@
     <property name="startOffset" type="int" value="2000"/>
    </properties>
   </object>
+  <object id="103" name="lightbulb" gid="7" x="224" y="1440" width="16" height="16"/>
+  <object id="105" name="lightbulb" gid="7" x="144" y="1430" width="16" height="16"/>
+  <object id="106" name="lightbulb" gid="7" x="120" y="1448" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="events" locked="1">
   <object id="102" name="playerStart" gid="7" x="49" y="1440" width="16" height="16"/>

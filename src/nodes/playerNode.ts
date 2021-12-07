@@ -46,7 +46,7 @@ export class PlayerNode extends Node {
     player.setOffset(14, 25);
     player.setDepth(50);
 
-    const playerShadow = this.scene.add.sprite(56, 1432, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(48);
+    const playerShadow = this.scene.add.sprite(56, 1432, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(32);
     const pipeline = (this.scene.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.get('characterShadowShader');
     playerShadow.setPipeline(pipeline);
     this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
@@ -59,7 +59,9 @@ export class PlayerNode extends Node {
 
     // Create the light on the ground that follows around the player.
     this.addNode('characterLight', {
-      'follow': player
+      'follow': player,
+      yOffset: 14,
+      depth: 30
     });
 
     // Create the light particles that follow the player around.
@@ -68,7 +70,7 @@ export class PlayerNode extends Node {
     });
 
     // Create the footsteps particle emitter.
-    this.groundParticles = this.scene.add.particles('textures', 'darkestPixel').setDepth(49);
+    this.groundParticles = this.scene.add.particles('textures', 'darkPixel').setDepth(49);
     const footsteps = this.groundParticles.createEmitter({
       alpha: 1,
       speed: { max: 10, min: 5 },
@@ -81,10 +83,10 @@ export class PlayerNode extends Node {
     });
 
     // Debug text. One day I'll move this into it's own node.
-    this.text = this.scene.add.text(10, 10, 'debug');
-    this.text.setScale(1);
-    this.text.setScrollFactor(0);
-    this.text.setDepth(1000);
+    // this.text = this.scene.add.text(10, 10, 'debug');
+    // this.text.setScale(1);
+    // this.text.setScrollFactor(0);
+    // this.text.setDepth(1000);
 
     // Create context using all created things for this node. This data is
     // passed to the state to update the player.
@@ -155,7 +157,7 @@ export class PlayerNode extends Node {
     this.state = this.state.update(time, delta, this.context);
 
     // Debug text.
-    this.text.setText('FPS: ' + (1000 / delta).toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString());
+    // this.text.setText('FPS: ' + (1000 / delta).toFixed(2) + '\n' + 'Objects: ' + this.scene.sys.displayList.list.length.toString());
   }
 
   public getSprite(): Phaser.GameObjects.Sprite {

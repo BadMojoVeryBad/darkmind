@@ -225,6 +225,9 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">textures/lightbulb.png</key>
+            <key type="filename">textures/lightbulb1.png</key>
+            <key type="filename">textures/lightbulbOn.png</key>
             <key type="filename">textures/platformIdle1.png</key>
             <key type="filename">textures/platformIdle2.png</key>
             <key type="filename">textures/platformIdle3.png</key>
@@ -336,41 +339,13 @@
             <key type="filename">textures/playerRunningUp4.png</key>
             <key type="filename">textures/playerRunningUp5.png</key>
             <key type="filename">textures/playerRunningUp6.png</key>
-            <key type="filename">textures/puffA1.png</key>
-            <key type="filename">textures/puffA2.png</key>
-            <key type="filename">textures/puffA3.png</key>
-            <key type="filename">textures/puffA4.png</key>
-            <key type="filename">textures/puffA5.png</key>
-            <key type="filename">textures/puffA6.png</key>
-            <key type="filename">textures/puffA7.png</key>
-            <key type="filename">textures/puffB1.png</key>
-            <key type="filename">textures/puffB2.png</key>
-            <key type="filename">textures/puffB3.png</key>
-            <key type="filename">textures/puffB4.png</key>
-            <key type="filename">textures/puffB5.png</key>
-            <key type="filename">textures/puffB6.png</key>
-            <key type="filename">textures/puffB7.png</key>
-            <key type="filename">textures/puffC1.png</key>
-            <key type="filename">textures/puffC2.png</key>
-            <key type="filename">textures/puffC3.png</key>
-            <key type="filename">textures/puffC4.png</key>
-            <key type="filename">textures/puffC5.png</key>
-            <key type="filename">textures/puffC6.png</key>
-            <key type="filename">textures/puffC7.png</key>
-            <key type="filename">textures/puffD1.png</key>
-            <key type="filename">textures/puffD2.png</key>
-            <key type="filename">textures/puffD3.png</key>
-            <key type="filename">textures/puffD4.png</key>
-            <key type="filename">textures/puffD5.png</key>
-            <key type="filename">textures/puffD6.png</key>
-            <key type="filename">textures/puffD7.png</key>
-            <key type="filename">textures/puffE1.png</key>
-            <key type="filename">textures/puffE2.png</key>
-            <key type="filename">textures/puffE3.png</key>
-            <key type="filename">textures/puffE4.png</key>
-            <key type="filename">textures/puffE5.png</key>
-            <key type="filename">textures/puffE6.png</key>
-            <key type="filename">textures/puffE7.png</key>
+            <key type="filename">textures/puff1.png</key>
+            <key type="filename">textures/puff2.png</key>
+            <key type="filename">textures/puff3.png</key>
+            <key type="filename">textures/puff4.png</key>
+            <key type="filename">textures/puff5.png</key>
+            <key type="filename">textures/puff6.png</key>
+            <key type="filename">textures/puff7.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

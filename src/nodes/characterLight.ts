@@ -7,6 +7,9 @@ import { Node, injectable } from 'phaser-node-framework';
 export class CharacterLight extends Node {
   private follow: Phaser.GameObjects.Sprite;
   private groundLight: Phaser.GameObjects.Sprite;
+  private yOffset: number;
+  private depth: number;
+  private mask: Phaser.Display.Masks.BitmapMask;
 
   public destroy(): void {
     this.groundLight.destroy();
@@ -16,12 +19,22 @@ export class CharacterLight extends Node {
 
   public init(data: Record<string, unknown>): void {
     this.follow = data.follow as Phaser.GameObjects.Sprite;
+    this.yOffset = data.yOffset as number;
+    this.depth = data.depth as number;
+
+    if (data.mask) {
+      this.mask = data.mask as Phaser.Display.Masks.BitmapMask;
+    }
   }
 
   public create(): void {
     this.groundLight = this.scene.add.sprite(0, 0, 'textures', 'groundLight1');
     this.groundLight.anims.play('groundLight');
-    this.groundLight.setDepth(30);
+    this.groundLight.setDepth(this.depth);
+
+    if (this.mask) {
+      this.groundLight.setMask(this.mask);
+    }
 
     this.scene.events.on('maskRenderTextureCreated', this.onMaskCreated, this);
     this.scene.events.on('postupdate', this.onPostUpdate, this);
@@ -33,6 +46,6 @@ export class CharacterLight extends Node {
 
   private onPostUpdate(): void {
     this.groundLight.x = this.follow.x;
-    this.groundLight.y = this.follow.y + 14;
+    this.groundLight.y = this.follow.y + this.yOffset;
   }
 }

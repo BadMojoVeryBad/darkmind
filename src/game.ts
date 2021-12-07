@@ -24,6 +24,7 @@ import { MapCollisionNode } from './nodes/mapCollisionNode';
 import { MapMaskNode } from './nodes/mapMaskNode';
 import { PauseNode } from './nodes/pauseNode';
 import { CharacterShadowShader } from './shaders/characterShadowShader';
+import { LightbulbNode } from './nodes/lightbulbNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -46,6 +47,7 @@ game.registerNode('mapMask', MapMaskNode);
 game.registerNode('islandParticles', IslandParticles);
 game.registerNode('lightParticles', LightParticles);
 game.registerNode('platform', PlatformNode);
+game.registerNode('lightbulb', LightbulbNode);
 
 // Register assets.
 game.registerAsset('tiles', 'assets/tiles/main.png');
@@ -81,6 +83,7 @@ game.registerControl('DOWN', 'Keyboard.40', 'Gamepad.DOWN', 'Gamepad.STICK_LEFT_
 game.registerControl('LEFT', 'Keyboard.37', 'Gamepad.LEFT', 'Gamepad.STICK_LEFT_LEFT');
 game.registerControl('RIGHT', 'Keyboard.39', 'Gamepad.RIGHT', 'Gamepad.STICK_LEFT_RIGHT');
 game.registerControl(CONSTANTS.CONTROL_DASH, 'Keyboard.32', 'Gamepad.A');
+game.registerControl(CONSTANTS.CONTROL_ACTIVATE, 'Keyboard.90', 'Gamepad.X');
 
 // Register services.
 game.registerService<Context>('context', Context, true);
