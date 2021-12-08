@@ -9,5 +9,6 @@ export class DefaultScene extends Scene {
     this.addNode('mapMask');
     this.addNode('player');
     this.addNode('depthOrdering');
+    this.addNode('vignette');
   }
 }

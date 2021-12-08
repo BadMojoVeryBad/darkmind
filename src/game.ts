@@ -26,6 +26,8 @@ import { PauseNode } from './nodes/pauseNode';
 import { CharacterShadowShader } from './shaders/characterShadowShader';
 import { LightbulbNode } from './nodes/lightbulbNode';
 import { DepthOrderingNode } from './nodes/depthOrderingNode';
+import { ColorShader } from './shaders/colorShader';
+import { VignetteNode } from './nodes/vignetteNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -50,8 +52,10 @@ game.registerNode('lightParticles', LightParticles);
 game.registerNode('platform', PlatformNode);
 game.registerNode('lightbulb', LightbulbNode);
 game.registerNode('depthOrdering', DepthOrderingNode);
+game.registerNode('vignette', VignetteNode);
 
 // Register assets.
+game.registerAsset('border', 'assets/vignette.png');
 game.registerAsset('tiles', 'assets/tiles/main.png');
 game.registerAsset('debugMap', 'assets/maps/debug.json');
 game.registerAsset('textures', 'assets/textures.png', 'assets/textures.json');
@@ -98,6 +102,7 @@ game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadS
 
 // WebGL pipelines.
 game.registerPipeline('characterShadowShader', CharacterShadowShader);
+game.registerPipeline('colorShader', ColorShader);
 
 // Start game.
 game.start();

@@ -21,6 +21,7 @@ export class CameraNode extends Node {
   private onPlayerCreated(player: PlayerNode): void {
     this.scene.cameras.main.setZoom(1);
     this.scene.cameras.main.startFollow(player.getSprite(), false, 0.05, 0.05, 0, 0);
+    this.scene.cameras.main.setPostPipeline('colorShader');
   }
 
   private onMapCreated(map: Phaser.Tilemaps.Tilemap): void {
