@@ -1,6 +1,7 @@
 import { Node, inject, injectable } from 'phaser-node-framework';
 import { NodeStateInterface } from '../states/nodeStateInterface';
 import { PlayerContext } from '../states/playerStates/playerContext';
+import { DepthData } from './depthOrderingNode';
 import { PlatformNode } from './platformNode';
 
 /**
@@ -46,7 +47,7 @@ export class PlayerNode extends Node {
     player.setOffset(14, 25);
     player.setDepth(50);
 
-    const playerShadow = this.scene.add.sprite(56, 1432, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(32);
+    const playerShadow = this.scene.add.sprite(56, 1432, 'textures', 'playerIdleUp1').setRotation(Math.PI/2).setScale(1).setDepth(591);
     const pipeline = (this.scene.renderer as Phaser.Renderer.WebGL.WebGLRenderer).pipelines.get('characterShadowShader');
     playerShadow.setPipeline(pipeline);
     this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
@@ -61,7 +62,7 @@ export class PlayerNode extends Node {
     this.addNode('characterLight', {
       'follow': player,
       yOffset: 14,
-      depth: 30
+      depth: 590
     });
 
     // Create the light particles that follow the player around.
@@ -70,7 +71,7 @@ export class PlayerNode extends Node {
     });
 
     // Create the footsteps particle emitter.
-    this.groundParticles = this.scene.add.particles('textures', 'darkPixel').setDepth(49);
+    this.groundParticles = this.scene.add.particles('textures', 'darkPixel').setDepth(592);
     const footsteps = this.groundParticles.createEmitter({
       alpha: 1,
       speed: { max: 10, min: 5 },
@@ -129,6 +130,10 @@ export class PlayerNode extends Node {
     // We need to keep track of all the platforms in a level in order to
     // figure out if the player is on one or not.
     this.scene.events.on('onPlatformCreated', this.onPlatformCreated, this);
+
+    this.scene.events.on('depth-ordering.collect-objects', (gameObjects: DepthData[]) => {
+      gameObjects.push(new DepthData(this.context.player, 7, 1));
+    })
   }
 
   public created(): void {

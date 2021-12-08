@@ -1,5 +1,6 @@
 import { Node, injectable, inject } from 'phaser-node-framework';
 import { TilemapStrategyInterface } from '../services/tilemapServiceInterface';
+import { DepthData } from './depthOrderingNode';
 import { Rectangle } from './mapCollisionNode';
 
 type AttachableObject = {
@@ -62,6 +63,7 @@ export class PlatformNode extends Node {
 
   public create(): void {
     this.sprite = this.scene.physics.add.sprite(this.x, this.y, 'textures', 'platformIdle1');
+    this.sprite.setName('Platform');
     this.sprite.body.immovable = true;
     this.sprite.anims.play('platformIdle');
     this.sprite.setDepth(10);
@@ -103,6 +105,10 @@ export class PlatformNode extends Node {
 
     // Hide behind map.
     this.scene.events.on('onMapMaskCreated', this.onMapMaskCreated, this);
+
+    this.scene.events.on('depth-ordering.collect-objects', (gameObjects: DepthData[]) => {
+      gameObjects.push(new DepthData(this.sprite, 0, 0));
+    })
 
     this.scene.events.on('unpause', () => {
       this.unpaused = true;

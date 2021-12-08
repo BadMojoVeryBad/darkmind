@@ -8,5 +8,6 @@ export class DefaultScene extends Scene {
     this.addNode('mapCollision');
     this.addNode('mapMask');
     this.addNode('player');
+    this.addNode('depthOrdering');
   }
 }

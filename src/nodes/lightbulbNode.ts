@@ -1,11 +1,14 @@
 import { Node, injectable, inject, ControlsInterface } from 'phaser-node-framework';
 import { CONSTANTS } from '../constants';
+import { DepthData } from './depthOrderingNode';
 import { PlayerNode } from './playerNode';
 
 export class LightbulbContext {
   public sprite: Phaser.Types.Physics.Arcade.SpriteWithStaticBody;
   public playerCollider: Phaser.Physics.Arcade.Collider;
+  public lightParticlesManager: Phaser.GameObjects.Particles.ParticleEmitterManager;
   public lightParticles: Phaser.GameObjects.Particles.ParticleEmitter;
+  public lightParticlesManager2: Phaser.GameObjects.Particles.ParticleEmitterManager;
   public lightParticles2: Phaser.GameObjects.Particles.ParticleEmitter;
   public isActive = false;
   public switchRectangle: Phaser.GameObjects.Rectangle;
@@ -43,9 +46,9 @@ export class LightbulbNode extends Node {
     (rectangle.body as Phaser.Physics.Arcade.Body).setCircle(32);
     this.context.switchRectangle = rectangle;
 
-    const lightParticles = this.scene.add.particles('textures', 'lightestPixel');
-    lightParticles.setDepth(1000);
-    this.context.lightParticles = lightParticles.createEmitter({
+    this.context.lightParticlesManager = this.scene.add.particles('textures', 'lightestPixel');
+    this.context.lightParticlesManager.setPosition(this.x, this.y).setDepth(1000);
+    this.context.lightParticles = this.context.lightParticlesManager.createEmitter({
       alpha: 1,
       speedX: { min: -10, max: 10 },
       speedY: { min: 0, max: 0 },
@@ -62,12 +65,12 @@ export class LightbulbNode extends Node {
         seamless: true,
       },
     });
-    this.context.lightParticles.setPosition(this.x, this.y);
+    // this.context.lightParticles.setPosition(this.x, this.y);
     this.context.lightParticles.stop();
 
-    const lightParticles2 = this.scene.add.particles('textures', 'darkPixel');
-    lightParticles2.setDepth(1000);
-    this.context.lightParticles2 = lightParticles2.createEmitter({
+    this.context.lightParticlesManager2 = this.scene.add.particles('textures', 'darkPixel');
+    this.context.lightParticlesManager2.setPosition(this.x, this.y).setDepth(1000);
+    this.context.lightParticles2 = this.context.lightParticlesManager2.createEmitter({
       alpha: 1,
       speedX: { min: -5, max: 5 },
       speedY: { min: 0, max: 0 },
@@ -84,7 +87,7 @@ export class LightbulbNode extends Node {
         seamless: true,
       },
     });
-    this.context.lightParticles2.setPosition(this.x, this.y);
+    // this.context.lightParticles2.setPosition(this.x, this.y);
     this.context.lightParticles2.start();
 
     this.scene.events.on('playerCreated',  (player: PlayerNode) => {
@@ -95,6 +98,12 @@ export class LightbulbNode extends Node {
     this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
       this.mask = mask;
     });
+
+    this.scene.events.on('depth-ordering.collect-objects', (gameObjects: DepthData[]) => {
+      gameObjects.push(new DepthData(this.context.sprite, 0, 1));
+      gameObjects.push(new DepthData(this.context.lightParticlesManager, -1, 1));
+      gameObjects.push(new DepthData(this.context.lightParticlesManager2, -1, 1));
+    })
   }
 
   public update() {

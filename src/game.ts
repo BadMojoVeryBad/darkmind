@@ -25,6 +25,7 @@ import { MapMaskNode } from './nodes/mapMaskNode';
 import { PauseNode } from './nodes/pauseNode';
 import { CharacterShadowShader } from './shaders/characterShadowShader';
 import { LightbulbNode } from './nodes/lightbulbNode';
+import { DepthOrderingNode } from './nodes/depthOrderingNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -48,6 +49,7 @@ game.registerNode('islandParticles', IslandParticles);
 game.registerNode('lightParticles', LightParticles);
 game.registerNode('platform', PlatformNode);
 game.registerNode('lightbulb', LightbulbNode);
+game.registerNode('depthOrdering', DepthOrderingNode);
 
 // Register assets.
 game.registerAsset('tiles', 'assets/tiles/main.png');
