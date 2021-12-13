@@ -132,6 +132,9 @@ export class PlatformNode extends Node {
       this.lastMovedTime = time + this.startOffset;
       this.lastdisappearedTime = time + this.startOffset;
       this.unpaused = false;
+      this.isTransparent = false;
+      this.sprite.anims.play('platformIdle', true);
+      this.maskSprite.anims.play('platformIdleMask', true);
     }
 
     if (this.moveTime && !this.isTweening) {
