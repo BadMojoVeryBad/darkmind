@@ -28,6 +28,7 @@ import { LightbulbNode } from './nodes/lightbulbNode';
 import { DepthOrderingNode } from './nodes/depthOrderingNode';
 import { ColorShader } from './shaders/colorShader';
 import { VignetteNode } from './nodes/vignetteNode';
+import { PrologueStartCutsceneNode } from './nodes/cutscenes/prologueStartCutsceneNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -53,6 +54,7 @@ game.registerNode('platform', PlatformNode);
 game.registerNode('lightbulb', LightbulbNode);
 game.registerNode('depthOrdering', DepthOrderingNode);
 game.registerNode('vignette', VignetteNode);
+game.registerNode('prologueStartCutscene', PrologueStartCutsceneNode);
 
 // Register assets.
 game.registerAsset('border', 'assets/vignette.png');

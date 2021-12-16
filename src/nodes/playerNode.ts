@@ -143,6 +143,8 @@ export class PlayerNode extends Node {
     // Platforms listen to this event to know what
     // objects can be attached to them.
     this.scene.events.emit('onAttachableToPlatformCreated', this.context.player);
+
+    this.scene.events.emit('cutscene.play.prologue_start');
   }
 
   public update(time: number, delta: number): void {
