@@ -12,5 +12,7 @@ export class DefaultScene extends Scene {
     this.addNode('vignette');
 
     this.addNode('prologueStartCutscene');
+
+    this.addNode('playerCharacter');
   }
 }

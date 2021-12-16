@@ -8,8 +8,6 @@ import { MapNode } from './nodes/mapNode';
 import { IslandParticles } from './nodes/islandParticles';
 import { NodeStateInterface } from './states/nodeStateInterface';
 import { PlayerContext } from './states/playerStates/playerContext';
-import { IdleState } from './states/playerStates/idleState';
-import { RunningState } from './states/playerStates/runningState';
 import { MathServiceInterface } from './services/mathServiceInterface';
 import { MathService } from './services/mathService';
 import { DashingState } from './states/playerStates/dashingState';
@@ -29,6 +27,14 @@ import { DepthOrderingNode } from './nodes/depthOrderingNode';
 import { ColorShader } from './shaders/colorShader';
 import { VignetteNode } from './nodes/vignetteNode';
 import { PrologueStartCutsceneNode } from './nodes/cutscenes/prologueStartCutsceneNode';
+import { IdleState } from './states/characterStates/idleState';
+import { CharacterNode } from './nodes/characters/characterNode';
+import { RunningState } from './states/characterStates/runningState';
+import { IdleState as PlayerIdleState2 } from './states/playerStates/idleState';
+import { RunningState as PlayerRunningState2 } from './states/playerStates/runningState';
+import { PlayerCharacterNode } from './nodes/characters/PlayerCharacterNode';
+import { PlayerIdleState } from './states/playerCharacterStates/playerIdleState';
+import { PlayerRunningState } from './states/playerCharacterStates/playerRunningState';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -44,6 +50,7 @@ game.registerScene('default', DefaultScene);
 game.registerNode('pause', PauseNode);
 game.registerNode('player', PlayerNode);
 game.registerNode('characterLight', CharacterLight);
+game.registerNode('playerCharacter', PlayerCharacterNode);
 game.registerNode('camera', CameraNode);
 game.registerNode('map', MapNode);
 game.registerNode('mapCollision', MapCollisionNode);
@@ -97,10 +104,15 @@ game.registerControl(CONSTANTS.CONTROL_ACTIVATE, 'Keyboard.90', 'Gamepad.X');
 game.registerService<Context>('context', Context, true);
 game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<TilemapStrategyInterface>('tilemapService', TilemapService);
-game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', IdleState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', PlayerIdleState2);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
-game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', RunningState);
+game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', PlayerRunningState2);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDeadState', DeadState);
+
+game.registerService<NodeStateInterface<CharacterNode>>('characterIdleState', IdleState);
+game.registerService<NodeStateInterface<CharacterNode>>('characterRunningState', RunningState);
+game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterIdleState', PlayerIdleState);
+game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterRunningState', PlayerRunningState);
 
 // WebGL pipelines.
 game.registerPipeline('characterShadowShader', CharacterShadowShader);
