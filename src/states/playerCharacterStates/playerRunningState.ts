@@ -19,9 +19,9 @@ export class PlayerRunningState extends RunningState implements NodeStateInterfa
     return 'characterRunning';
   }
 
-  update(time: number, delta: number, context: CharacterNode): NodeStateInterface<PlayerCharacterNode> {
+  update(time: number, delta: number, context: PlayerCharacterNode): NodeStateInterface<PlayerCharacterNode> {
     // Do the logic that's generic to all characters.
-    super.update(time, delta, context);
+    const parentState = super.update(time, delta, context);
 
     // Player input.
     const inputVector = new Phaser.Math.Vector2(
@@ -30,17 +30,19 @@ export class PlayerRunningState extends RunningState implements NodeStateInterfa
     );
 
     // Transition to idle state if not moving.
-    if (!inputVector.x && !inputVector.y) {
+    if ((!inputVector.x && !inputVector.y) || (!context.controlsEnabled() && parentState.getName() === 'characterIdle')) {
       const idleState = context.states.find((state) => state.getName() === 'characterIdle');
       return idleState;
     }
 
-    // Set the velocity.
-    const playerSpeed = Math.min(1, inputVector.length()) * CONSTANTS.PLAYER_SPEED;
-    const playerAngle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));
-    const playerVector = this.mathService.velocityFromRotation(playerAngle, playerSpeed);
-    context.sprite.setVelocity(playerVector.x, playerVector.y);
-    context.angle = playerAngle;
+    if (context.controlsEnabled()) {
+      // Set the velocity.
+      const playerSpeed = Math.min(1, inputVector.length()) * CONSTANTS.PLAYER_SPEED;
+      const playerAngle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));
+      const playerVector = this.mathService.velocityFromRotation(playerAngle, playerSpeed);
+      context.sprite.setVelocity(playerVector.x, playerVector.y);
+      context.angle = playerAngle;
+    }
 
     return this;
   }

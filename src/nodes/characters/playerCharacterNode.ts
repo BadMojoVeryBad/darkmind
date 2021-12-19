@@ -5,6 +5,8 @@ import { CharacterNode } from "./characterNode";
 
 @injectable()
 export class PlayerCharacterNode extends CharacterNode {
+  private controlsDisabledCount = 0;
+
   public constructor(
     @inject('playerCharacterIdleState') idleState: PlayerIdleState,
     @inject('playerCharacterRunningState') runningState: PlayerRunningState
@@ -18,9 +20,23 @@ export class PlayerCharacterNode extends CharacterNode {
 
   public created(): void {
     this.scene.events.emit('playerCharacterCreated', this);
+
+    this.scene.events.emit('cutscene.play.prologue_start');
   }
 
   public name(): string {
     return 'player';
+  }
+
+  public disableControls(): void {
+    this.controlsDisabledCount++;
+  }
+
+  public enableControls(): void {
+    this.controlsDisabledCount--;
+  }
+
+  public controlsEnabled(): boolean {
+    return this.controlsDisabledCount === 0;
   }
 }
