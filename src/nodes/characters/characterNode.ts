@@ -61,14 +61,14 @@ export abstract class CharacterNode extends Node {
     this.scene.events.on('maskRenderTextureCreated', (mask: Phaser.Display.Masks.BitmapMask) => {
       this.shadow.setMask(mask);
     });
-  }
 
-  public update(time: number, delta: number): void {
     // Add the character to the depth ordering logic.
     this.scene.events.on('depth-ordering.collect-objects', (gameObjects: DepthData[]) => {
       gameObjects.push(new DepthData(this.sprite, 7, 1));
     });
+  }
 
+  public update(time: number, delta: number): void {
     // Do state-specific logic.
     this.currentState = this.currentState.update(
       time,
@@ -87,5 +87,9 @@ export abstract class CharacterNode extends Node {
 
   public faceDirection(direction: Direction) {
     this.angle = direction;
+  }
+
+  public getSprite(): Phaser.Physics.Arcade.Sprite {
+    return this.sprite;
   }
 }

@@ -35,6 +35,8 @@ import { RunningState as PlayerRunningState2 } from './states/playerStates/runni
 import { PlayerCharacterNode } from './nodes/characters/PlayerCharacterNode';
 import { PlayerIdleState } from './states/playerCharacterStates/playerIdleState';
 import { PlayerRunningState } from './states/playerCharacterStates/playerRunningState';
+import { PlayerDashingState } from './states/playerCharacterStates/playerDashingState';
+import { PlayerDeadState } from './states/playerCharacterStates/playerDeadState';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -113,6 +115,8 @@ game.registerService<NodeStateInterface<CharacterNode>>('characterIdleState', Id
 game.registerService<NodeStateInterface<CharacterNode>>('characterRunningState', RunningState);
 game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterIdleState', PlayerIdleState);
 game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterRunningState', PlayerRunningState);
+game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterDashingState', PlayerDashingState);
+game.registerService<NodeStateInterface<PlayerCharacterNode>>('playerCharacterDeadState', PlayerDeadState);
 
 // WebGL pipelines.
 game.registerPipeline('characterShadowShader', CharacterShadowShader);

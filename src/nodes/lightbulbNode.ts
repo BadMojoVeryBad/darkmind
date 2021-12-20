@@ -1,5 +1,6 @@
 import { Node, injectable, inject, ControlsInterface } from 'phaser-node-framework';
 import { CONSTANTS } from '../constants';
+import { PlayerCharacterNode } from './characters/PlayerCharacterNode';
 import { DepthData } from './depthOrderingNode';
 import { PlayerNode } from './playerNode';
 
@@ -19,7 +20,7 @@ export class LightbulbNode extends Node {
   private x: number = 0;
   private y: number = 0;
   private context: LightbulbContext;
-  private player: PlayerNode;
+  private player: PlayerCharacterNode;
   private mask: Phaser.Display.Masks.BitmapMask;
 
   public constructor(
@@ -90,7 +91,7 @@ export class LightbulbNode extends Node {
     // this.context.lightParticles2.setPosition(this.x, this.y);
     this.context.lightParticles2.start();
 
-    this.scene.events.on('playerCreated',  (player: PlayerNode) => {
+    this.scene.events.on('playerCharacterCreated',  (player: PlayerCharacterNode) => {
       this.context.playerCollider = this.scene.physics.add.collider(player.getSprite(), this.context.sprite);
       this.player = player;
     });

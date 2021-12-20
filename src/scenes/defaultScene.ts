@@ -7,7 +7,7 @@ export class DefaultScene extends Scene {
     this.addNode('map', { name: 'debugMap' });
     this.addNode('mapCollision');
     this.addNode('mapMask');
-    this.addNode('player');
+    // this.addNode('player');
     this.addNode('depthOrdering');
     this.addNode('vignette');
 

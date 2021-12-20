@@ -35,7 +35,43 @@ export class PlayerRunningState extends RunningState implements NodeStateInterfa
       return idleState;
     }
 
+    // Do footstep.
+    if (context.sprite.anims.currentFrame.index === 1 && context.hasStepped) {
+      context.hasStepped = false;
+      context.groundParticlesEmitter.explode(10, context.sprite.x, context.sprite.y + 12);
+    } else if (context.sprite.anims.currentFrame.index !== 1) {
+      context.hasStepped = true;
+    }
+
     if (context.controlsEnabled()) {
+      // Check for dead.
+      if (!context.isOverlappingMap && !context.isOnPlatform) {
+        context.deathAnimation.setPosition(context.sprite.x, context.sprite.y);
+        context.deathAnimation.visible = true;
+        context.deathAnimation.anims.play('puff');
+        context.deadTime = time;
+
+        const nextState = context.states.find((state) => state.getName() === 'playerDead');
+        return nextState.update(time, delta, context);
+      }
+
+      // Transition to dashing state if the dash control is active.
+      if (this.controls.isActive(CONSTANTS.CONTROL_DASH) && context.dashTime + CONSTANTS.PLAYER_DASH_RESET_TIME < time) {
+        context.dashTime = time;
+        context.angle = this.mathService.closestMultiple(context.angle, Math.PI / 4);
+        context.dashVector = this.mathService.radiansToVector(context.angle);
+        context.dashStart.x = context.sprite.x;
+        context.dashStart.y = context.sprite.y;
+        const dashState = context.states.find((state) => state.getName() === 'playerDashing');
+        return dashState;
+      }
+
+      // Set safe position if the player
+      // is overlapping a tile.
+      if (context.isOverlappingMap) {
+        context.lastSafePosition = new Phaser.Math.Vector2(context.sprite.x, context.sprite.y);
+      }
+
       // Set the velocity.
       const playerSpeed = Math.min(1, inputVector.length()) * CONSTANTS.PLAYER_SPEED;
       const playerAngle = this.mathService.vectorToRadians(inputVector, new Phaser.Math.Vector2(0, 0));
