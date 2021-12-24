@@ -2,7 +2,7 @@ import { Scene } from 'phaser-node-framework';
 
 export class DefaultScene extends Scene {
   public preload(): void {
-    this.load.bitmapFont('pixelFont', 'assets/Unnamed.png', 'assets/Unnamed.xml');
+    this.load.bitmapFont('pixelFont', 'assets/pixel.png', 'assets/pixel.xml');
   }
 
   public init(): void {
