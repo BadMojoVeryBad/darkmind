@@ -22,6 +22,7 @@ export class LightbulbNode extends Node {
   private context: LightbulbContext;
   private player: PlayerCharacterNode;
   private mask: Phaser.Display.Masks.BitmapMask;
+  private arrow: Phaser.GameObjects.Sprite;
 
   public constructor(
     @inject('controls') private controls: ControlsInterface,
@@ -40,6 +41,11 @@ export class LightbulbNode extends Node {
     this.context.sprite.setDepth(1001);
     this.context.sprite.setSize(5, 4);
     this.context.sprite.setOffset(14, 18);
+
+    this.arrow = this.scene.add.sprite(0, 0, 'textures', 'arrow')
+      .setDepth(1001)
+      .setPosition(this.context.sprite.x, this.context.sprite.y - 12)
+    this.arrow.anims.play('arrow');
 
     const rectangle = this.scene.add.rectangle(this.context.sprite.x, this.context.sprite.y + 4, 64, 64, 0xff0000);
     rectangle.setVisible(false);
@@ -108,7 +114,10 @@ export class LightbulbNode extends Node {
   }
 
   public update() {
-    if (this.controls.isActive(CONSTANTS.CONTROL_ACTIVATE) && !this.context.isActive && this.scene.physics.overlap(this.player.getSprite(), this.context.switchRectangle)) {
+    const overlap = this.scene.physics.overlap(this.player.getSprite(), this.context.switchRectangle);
+    this.arrow.setVisible(!this.context.isActive && overlap)
+
+    if (this.controls.isActive(CONSTANTS.CONTROL_ACTIVATE) && !this.context.isActive && overlap) {
       this.context.isActive = true;
 
       this.context.lightParticles2.stop();
