@@ -42,6 +42,7 @@ import { TestCutsceneNode } from './nodes/cutscenes/testCutsceneNode';
 import { DialogueNode } from './nodes/dialogueNode';
 import { DialogueFactoryInterface } from './services/dialogue/dialogueFactoryInterface';
 import { DialogueFactory } from './services/dialogue/dialogueFactory';
+import { TextNode } from './nodes/textNode';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -70,6 +71,7 @@ game.registerNode('depthOrdering', DepthOrderingNode);
 game.registerNode('vignette', VignetteNode);
 game.registerNode('trigger', TriggerNode);
 game.registerNode('dialogue', DialogueNode);
+game.registerNode('text', TextNode);
 
 game.registerNode('prologueStartCutscene', PrologueStartCutsceneNode);
 game.registerNode('testCutscene', TestCutsceneNode);
@@ -102,6 +104,7 @@ game.registerAnimation('textures', 'platformIdle', 1, 8, true, 12);
 game.registerAnimation('textures', 'platformWiggling', 1, 2, true, 12);
 game.registerAnimation('textures', 'platformIdleMask', 1, 8, true, 12);
 game.registerAnimation('textures', 'platformWigglingMask', 1, 2, true, 12);
+game.registerAnimation('textures', 'arrow', 1, 13, true, 12);
 
 // Register controls.
 game.registerControl('UP', 'Keyboard.38', 'Gamepad.UP', 'Gamepad.STICK_LEFT_UP');

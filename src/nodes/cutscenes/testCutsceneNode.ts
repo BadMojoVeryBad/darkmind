@@ -3,6 +3,7 @@ import { Direction } from '../characters/characterNode';
 import { PlayerCharacterNode } from '../characters/PlayerCharacterNode';
 import { CutsceneNode } from './CutsceneNode';
 
+// TODO: A nice way of playing dialogue boxes.
 @injectable()
 export class TestCutsceneNode extends CutsceneNode {
   private player: PlayerCharacterNode;
@@ -33,7 +34,7 @@ export class TestCutsceneNode extends CutsceneNode {
 
     await this.sleep(1000);
 
-    this.scene.events.emit('dialogue.start', 'test');
+    await this.doDialogue('test');
 
     this.player.enableControls();
   }

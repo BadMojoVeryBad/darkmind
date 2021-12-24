@@ -4970,7 +4970,7 @@ path@^0.12.7:
 
 "phaser-node-framework@https://github.com/BadMojoVeryBad/phaser-node-framework.git#master":
   version "0.0.0"
-  resolved "https://github.com/BadMojoVeryBad/phaser-node-framework.git#02032c9aef148525c0c8f1a0bbcdd31521493400"
+  resolved "https://github.com/BadMojoVeryBad/phaser-node-framework.git#ce4b8479bfe9164d4f7fa95680fe5e7087c91cda"
   dependencies:
     "@billjs/event-emitter" "^1.0.3"
     inversify "^5.0.1"

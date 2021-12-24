@@ -19,4 +19,15 @@ export class CutsceneNode extends Node {
   public async sleep(time: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, time));
   }
+
+  protected async doDialogue(name: string): Promise<void> {
+    return new Promise((res) => {
+      this.scene.events.emit('dialogue.start', name);
+      this.scene.events.once('dialogue.end', (endedName: string) => {
+        if (endedName === name) {
+          res();
+        }
+      });
+    });
+  }
 }
