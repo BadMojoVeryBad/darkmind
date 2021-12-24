@@ -1149,6 +1149,42 @@
                  "width":16,
                  "x":880,
                  "y":1328
+                }, 
+                {
+                 "gid":7,
+                 "height":31,
+                 "id":121,
+                 "name":"trigger",
+                 "properties":[
+                        {
+                         "name":"event",
+                         "type":"string",
+                         "value":"cutscene.play.test"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":49,
+                 "x":105,
+                 "y":1447
+                }, 
+                {
+                 "gid":7,
+                 "height":54,
+                 "id":122,
+                 "name":"trigger",
+                 "properties":[
+                        {
+                         "name":"event",
+                         "type":"string",
+                         "value":"cutscene.play.dialogue_test"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":14,
+                 "x":26,
+                 "y":1459
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1180,7 +1216,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":121,
+ "nextobjectid":123,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.0",

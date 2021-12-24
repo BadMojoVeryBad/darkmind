@@ -37,6 +37,11 @@ import { PlayerIdleState } from './states/playerCharacterStates/playerIdleState'
 import { PlayerRunningState } from './states/playerCharacterStates/playerRunningState';
 import { PlayerDashingState } from './states/playerCharacterStates/playerDashingState';
 import { PlayerDeadState } from './states/playerCharacterStates/playerDeadState';
+import { TriggerNode } from './nodes/triggerNode';
+import { TestCutsceneNode } from './nodes/cutscenes/testCutsceneNode';
+import { DialogueNode } from './nodes/dialogueNode';
+import { DialogueFactoryInterface } from './services/dialogue/dialogueFactoryInterface';
+import { DialogueFactory } from './services/dialogue/dialogueFactory';
 
 // Create a game.
 const game = Game.create(CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, {
@@ -63,7 +68,11 @@ game.registerNode('platform', PlatformNode);
 game.registerNode('lightbulb', LightbulbNode);
 game.registerNode('depthOrdering', DepthOrderingNode);
 game.registerNode('vignette', VignetteNode);
+game.registerNode('trigger', TriggerNode);
+game.registerNode('dialogue', DialogueNode);
+
 game.registerNode('prologueStartCutscene', PrologueStartCutsceneNode);
+game.registerNode('testCutscene', TestCutsceneNode);
 
 // Register assets.
 game.registerAsset('border', 'assets/vignette.png');
@@ -106,6 +115,7 @@ game.registerControl(CONSTANTS.CONTROL_ACTIVATE, 'Keyboard.90', 'Gamepad.X');
 game.registerService<Context>('context', Context, true);
 game.registerService<MathServiceInterface>('mathService', MathService);
 game.registerService<TilemapStrategyInterface>('tilemapService', TilemapService);
+game.registerService<DialogueFactoryInterface>('dialogueFactory', DialogueFactory);
 game.registerService<NodeStateInterface<PlayerContext>>('playerIdleState', PlayerIdleState2);
 game.registerService<NodeStateInterface<PlayerContext>>('playerDashingState', DashingState);
 game.registerService<NodeStateInterface<PlayerContext>>('playerRunningState', PlayerRunningState2);

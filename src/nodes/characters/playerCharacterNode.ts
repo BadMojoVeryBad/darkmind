@@ -68,6 +68,11 @@ export class PlayerCharacterNode extends CharacterNode {
     // We need to keep track of all the platforms in a level in order to
     // figure out if the player is on one or not.
     this.scene.events.on('onPlatformCreated', this.onPlatformCreated, this);
+
+    this.scene.events.on('playerStart', (event: Phaser.Types.Tilemaps.TiledObject) => {
+      this.sprite.x = event.x + 8;
+      this.sprite.y = event.y - 20;
+    });
   }
 
   public created(): void {
